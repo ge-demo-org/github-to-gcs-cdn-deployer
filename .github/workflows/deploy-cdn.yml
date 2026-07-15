@@ -23,7 +23,7 @@ jobs:
       - name: Google Cloud 인증 (WIF)
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: 'projects/YOUR_PROJECT_NUMBER/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          workload_identity_provider: 'projects/1098336234556/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
           service_account: 'github-deployer@gemini-enterprise-propagation.iam.gserviceaccount.com'
 
       - name: GCS 버킷으로 정적 파일 업로드
