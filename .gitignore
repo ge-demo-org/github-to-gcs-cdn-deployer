@@ -16,5 +16,9 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
+# Sensitive variable files
+*.tfvars
+*.tfvars.json
+
 # macOS system files
 .DS_Store
