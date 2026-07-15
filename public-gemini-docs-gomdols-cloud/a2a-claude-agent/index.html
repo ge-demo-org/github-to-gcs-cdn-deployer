@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GE × Claude Code (A2A) - Multi-Model Autonomous Coding Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a'
+            },
+            cyan: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2'
+            },
+            coral: {
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c'
+            },
+            surface: {
+              base: '#0B1120',
+              card: '#0F172A',
+              cardHover: '#1E293B'
+            }
+          },
+          fontFamily: {
+            sans: ['Pretendard', 'Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @layer base {
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background-color: #0B1120;
+        color: #F8FAFC;
+        overflow-x: hidden;
+      }
+    }
+    .hero-glow {
+      background: radial-gradient(circle at 50% 15%, rgba(59, 130, 246, 0.18) 0%, rgba(6, 182, 212, 0.08) 35%, transparent 70%);
+    }
+    .card-glass {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .card-glass:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.15);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #60A5FA 0%, #22D3EE 50%, #F97316 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B1120;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E293B;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Top Navigation Bar -->
+  <header class="fixed top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between h-16 bg-slate-900/85 backdrop-blur-xl border border-white/10 rounded-2xl px-6 shadow-2xl">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-cyan-500 to-coral-500 p-0.5 shadow-lg shadow-brand-500/20">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+            <span class="material-symbols-outlined text-cyan-400 text-[22px]">architecture</span>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-base leading-tight tracking-tight text-white">GE × Claude Code</span>
+          <span class="text-[11px] text-cyan-400 font-mono tracking-wider uppercase">A2A Multi-Model</span>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#home" class="hover:text-cyan-400 transition-colors">개요</a>
+        <a href="#prompt-starter" class="hover:text-cyan-400 transition-colors">시작 프롬프트</a>
+        <a href="#core-features" class="hover:text-cyan-400 transition-colors">4대 핵심 기술 (멀티모델)</a>
+        <a href="#multi-surface" class="hover:text-cyan-400 transition-colors">크로스 채널</a>
+        <a href="#interactive-demo" class="hover:text-cyan-400 transition-colors">A2UI 시뮬레이터</a>
+        <a href="#architecture" class="hover:text-cyan-400 transition-colors">아키텍처</a>
+        <a href="#quickstart" class="hover:text-cyan-400 transition-colors">빠른 시작</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="https://youtu.be/z9cTW6IyE10?si=5g_Mde-4st_aQYD9" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-1.5 bg-red-600/90 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-xl text-xs sm:text-sm shadow-lg shadow-red-600/25 transition-all">
+          <span class="material-symbols-outlined text-base">play_circle</span>
+          <span>사용법 가이드</span>
+        </a>
+        <a href="https://github.com/ldu1225/ge-claude-a2a.git" target="_blank" rel="noopener noreferrer" 
+           class="inline-flex items-center gap-2 bg-gradient-to-r from-brand-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 text-white font-semibold py-2 px-4 rounded-xl text-xs sm:text-sm shadow-lg shadow-brand-500/25 transition-all duration-200">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-20">
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-20 pb-24 px-4 sm:px-8 hero-glow overflow-hidden">
+      <div class="max-w-6xl mx-auto relative z-10 text-center">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/90 border border-cyan-500/40 text-cyan-400 text-xs font-mono font-medium mb-8 backdrop-blur-md shadow-lg">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          <span>A2A MULTI-MODEL AUTONOMOUS CODING ARCHITECTURE</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.15]">
+          Gemini Enterprise App <br class="hidden sm:inline">
+          <span class="gradient-text">× Claude Code (A2A)</span>
+        </h1>
+
+        <p class="max-w-3xl mx-auto text-lg sm:text-xl text-slate-300 font-normal leading-relaxed mb-10">
+          <strong class="text-white font-semibold">A2A(Agent-to-Agent) 프로토콜</strong>을 기반으로 단일 에이전트 대화창에서 작업 특성에 맞춰
+          <span class="text-cyan-400 font-bold">Gemini</span> 모델뿐만 아니라 <span class="text-coral-400 font-bold">Claude</span> 모델 중 원하는 LLM을
+          자유롭게 선택하여 호출할 수 있습니다.<br class="hidden md:inline">
+          또한 모바일·웹 채팅과 <strong class="text-white">Cloud Workstations (VS Code/터미널)</strong> 간 동일한 세션을 중단 없이 이어 작업하는 하이브리드 인프라를 실현합니다.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-16">
+          <a href="https://github.com/ldu1225/ge-claude-a2a.git" target="_blank" rel="noopener noreferrer" 
+             class="bg-gradient-to-r from-brand-600 via-cyan-600 to-brand-600 hover:from-brand-500 hover:to-cyan-500 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-brand-500/25 transition-all transform hover:-translate-y-0.5 flex items-center gap-2.5 text-base">
+            <span class="material-symbols-outlined">code_blocks</span>
+            <span>GitHub 저장소 확인</span>
+          </a>
+          <a href="https://youtu.be/z9cTW6IyE10?si=5g_Mde-4st_aQYD9" target="_blank" rel="noopener noreferrer"
+             class="bg-red-600 hover:bg-red-500 text-white font-semibold px-7 py-4 rounded-2xl shadow-lg shadow-red-600/30 transition-all flex items-center gap-2 text-base transform hover:-translate-y-0.5">
+            <span class="material-symbols-outlined">play_arrow</span>
+            <span>사용법 가이드 (YouTube)</span>
+          </a>
+          <a href="#quickstart"
+             class="bg-slate-900/80 hover:bg-slate-800 text-cyan-400 font-semibold px-7 py-4 rounded-2xl border border-cyan-500/30 transition-all flex items-center gap-2 text-base">
+            <span class="material-symbols-outlined">rocket_launch</span>
+            <span>빠른 구축 가이드</span>
+          </a>
+        </div>
+
+        <!-- Highlight Key Metric Banner -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+          <div class="p-6 rounded-2xl card-glass text-left">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-coral-400 uppercase tracking-wider">Multi-Model</span>
+              <span class="material-symbols-outlined text-coral-400">hub</span>
+            </div>
+            <div class="text-xl font-bold text-white mb-1">Gemini ↔ Claude 선택</div>
+            <p class="text-xs text-slate-400">A2A 프로토콜로 에이전트 안에서 원하는 최적의 LLM 모델을 선택 호출</p>
+          </div>
+
+          <div class="p-6 rounded-2xl card-glass text-left">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider">Reliability</span>
+              <span class="material-symbols-outlined text-cyan-400">auto_fix_high</span>
+            </div>
+            <div class="text-xl font-bold text-white mb-1">0.001s 복구 엔진</div>
+            <p class="text-xs text-slate-400">LLM JSON 문법 오류를 실시간 자가 복구하여 100% 견고한 A2UI 렌더링</p>
+          </div>
+
+          <div class="p-6 rounded-2xl card-glass text-left">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-brand-400 uppercase tracking-wider">Continuity</span>
+              <span class="material-symbols-outlined text-brand-400">sync_alt</span>
+            </div>
+            <div class="text-xl font-bold text-white mb-1">100% 세션 연동</div>
+            <p class="text-xs text-slate-400">모바일 채팅 ↔ Web IDE 터미널 간 대화 및 수정 파일 실시간 동기화</p>
+          </div>
+
+          <div class="p-6 rounded-2xl card-glass text-left">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider">UX Innovation</span>
+              <span class="material-symbols-outlined text-emerald-400">dashboard_customize</span>
+            </div>
+            <div class="text-xl font-bold text-white mb-1">맞춤형 A2UI 콘솔</div>
+            <p class="text-xs text-slate-400">단일 주소 링크 정돈 및 앱 비즈니스 로직에 맞춘 동적 위젯 자동 생성</p>
+          </div>
+        </div>
+    </section>
+
+    <!-- Featured Starter Prompt Section -->
+    <section id="prompt-starter" class="py-16 px-4 sm:px-8 bg-gradient-to-b from-slate-950/40 to-slate-900/60 border-t border-white/5">
+      <div class="max-w-5xl mx-auto">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+          <div>
+            <span class="text-xs font-mono text-coral-400 font-bold uppercase tracking-wider">RECOMMENDED STARTING PROMPT</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+              에이전트 자율 코딩 추천 시작 프롬프트
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">
+              아래 프롬프트를 복사하여 채팅창에 입력하면 엔터프라이즈급 풀스택 웹 대시보드가 자율 생성됩니다.
+            </p>
+          </div>
+          <button onclick="copyFeaturedPrompt(this)" 
+                  class="bg-gradient-to-r from-coral-500 to-brand-600 hover:from-coral-400 hover:to-brand-500 text-white font-bold px-6 py-3.5 rounded-2xl shadow-lg shadow-coral-500/20 transition-all flex items-center gap-2 text-sm flex-shrink-0">
+            <span class="material-symbols-outlined text-base">content_copy</span>
+            <span>프롬프트 복사하기</span>
+          </button>
+        </div>
+
+        <!-- Prompt Card -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass border border-coral-500/30 relative overflow-hidden">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-coral-400"></span>
+              <span class="text-xs font-mono text-slate-300 font-semibold">Enterprise Sales Dashboard App Prompt</span>
+            </div>
+            <span class="text-[11px] font-mono bg-coral-500/10 text-coral-300 px-2.5 py-1 rounded-full border border-coral-500/30">
+              Full-Stack + Chart.js + A2UI
+            </span>
+          </div>
+          <p id="featured-prompt-text" class="text-base sm:text-lg text-white font-medium leading-relaxed font-sans select-all">
+            "글로벌 지역별 매출 실적과 성장 추이를 시각화해 주는 멋진 기업용 매출 대시보드 웹 어플리케이션을 만들어줘. index.html, style.css, app.js로 깔끔하게 구조화해서 정석대로 빌드해주고, 매출 추이차트(chart.js 활용)가 들어가게 해줘, 다되면 가동하고 대시보드 카드를 보여줘"
+          </p>
+          <div class="flex flex-wrap items-center gap-3 mt-6 pt-4 border-t border-white/10 text-xs text-slate-400">
+            <span class="flex items-center gap-1.5 text-cyan-300">
+              <span class="material-symbols-outlined text-sm">check_circle</span>
+              <span>index.html / style.css / app.js 분리 구조화</span>
+            </span>
+            <span class="flex items-center gap-1.5 text-emerald-300">
+              <span class="material-symbols-outlined text-sm">check_circle</span>
+              <span>Chart.js 기반 글로벌 실적 추이 시각화</span>
+            </span>
+            <span class="flex items-center gap-1.5 text-coral-300">
+              <span class="material-symbols-outlined text-sm">check_circle</span>
+              <span>로컬 포트 가동 및 A2UI 라이브 대시보드 카드 출력</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 Core Differentiated Features Section -->
+    <section id="core-features" class="py-24 px-4 sm:px-8 relative border-t border-white/5">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-mono font-semibold text-cyan-400 uppercase tracking-widest block mb-2">CORE INNOVATIONS</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            A2A 프로토콜 기반 4대 핵심 혁신 기술
+          </h2>
+          <p class="text-slate-400 text-base sm:text-lg">
+            단일 모델에 종속되지 않고 Gemini와 Claude의 장점을 모두 활용하는 차세대 자율 코딩 환경입니다.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Card 1: Multi-Model Switching -->
+          <div class="card-glass rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative group border-cyan-500/30">
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-coral-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-3xl">model_training</span>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">KEY POINT #1</span>
+              </div>
+              <span class="text-xs font-mono text-cyan-400 font-bold tracking-wider uppercase">FEATURE 01</span>
+              <h3 class="text-2xl font-bold text-white mt-1 mb-4">
+                A2A 기반 멀티모델 동적 선택 호출 <br>
+                <span class="text-sm font-normal text-slate-400">(Gemini ↔ Claude Dynamic Model Selection)</span>
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                특정 버전에 얽매이지 않습니다. 에이전트 대화창 안에서 과제의 난이도와 속성(대규모 문맥 분석 vs 정밀 디버깅/코드 생성)에 따라
+                <strong class="text-cyan-400">Gemini LLM</strong>과 <strong class="text-coral-400">Claude LLM</strong> 등
+                원하는 최적의 모델을 자유롭게 골라 LLM으로 호출하여 실행할 수 있도록 A2A 표준 프로토콜로 통합 설계되었습니다.
+              </p>
+            </div>
+            <div class="bg-slate-950/90 rounded-2xl p-4 border border-white/10 font-mono text-xs">
+              <div class="flex items-center justify-between text-slate-400 mb-3 border-b border-white/10 pb-2">
+                <span>A2A Model Routing Header</span>
+                <span class="text-emerald-400">Multi-Engine Ready</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-cyan-500/30 flex items-center justify-between">
+                  <span class="text-cyan-300 font-bold">⚡ Gemini LLM</span>
+                  <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded">고속 분석</span>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-coral-500/30 flex items-center justify-between">
+                  <span class="text-coral-300 font-bold">🧠 Claude LLM</span>
+                  <span class="text-[10px] bg-coral-500/20 text-coral-300 px-1.5 py-0.5 rounded">정밀 코딩</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Self-Healing JSON -->
+          <div class="card-glass rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative group">
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-3xl">healing</span>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-xs font-mono font-bold">KEY POINT #2</span>
+              </div>
+              <span class="text-xs font-mono text-cyan-400 font-bold tracking-wider uppercase">FEATURE 02</span>
+              <h3 class="text-2xl font-bold text-white mt-1 mb-4">
+                실시간 JSON 자가 복구 엔진 <br>
+                <span class="text-sm font-normal text-slate-400">(Self-Healing JSON Repair)</span>
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                LLM이 복잡한 A2UI 구성 요소를 JSON으로 출력할 때 생기는 미세한 괄호 누락, 콤마 오류, 제어 문자 불일치를 
+                라우터의 <strong class="text-white">자가 복구 파서</strong>가 <strong class="text-cyan-400">0.001초 만에 실시간 재조립</strong>하여 어떤 에러 상황에서도 화면이 깨지지 않는 100% 견고한 렌더링을 보장합니다.
+              </p>
+            </div>
+            <div class="bg-slate-950/90 rounded-2xl p-4 border border-white/10 font-mono text-xs">
+              <div class="flex items-center justify-between text-slate-400 mb-2 border-b border-white/10 pb-1">
+                <span>Realtime JSON Guard</span>
+                <span class="text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Auto-Healed</span>
+              </div>
+              <div class="text-red-400/80 line-through">{"cards": [{"type": "widget", "title": "Dashboard"</div>
+              <div class="text-cyan-300 mt-1">{"cards": [{"type": "widget", "title": "Dashboard"}]}</div>
+            </div>
+          </div>
+
+          <!-- Card 3: Tailored A2UI -->
+          <div class="card-glass rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative group">
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-coral-500/10 border border-coral-500/20 flex items-center justify-center text-coral-400 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-3xl">dashboard_customize</span>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-xs font-mono font-bold">KEY POINT #3</span>
+              </div>
+              <span class="text-xs font-mono text-coral-400 font-bold tracking-wider uppercase">FEATURE 03</span>
+              <h3 class="text-2xl font-bold text-white mt-1 mb-4">
+                맞춤형 비즈니스 콘솔 제어판 <br>
+                <span class="text-sm font-normal text-slate-400">(Tailored A2UI Concept)</span>
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                번잡한 텍스트 주소 나열 대신 단일 하이퍼링크(<code class="text-coral-300">🔗 [앱 실행하기]</code>, <code class="text-coral-300">💻 [Open in Web IDE]</code>)로 레이아웃을 간결화하고,
+                사용자가 개발 중인 애플리케이션의 도메인(날씨, 게임, 차트 등)에 맞춰 <strong class="text-white">동적 UI 컨트롤</strong>을 자동 생성합니다.
+              </p>
+            </div>
+            <div class="bg-slate-950/90 rounded-2xl p-4 border border-white/10 font-mono text-xs">
+              <div class="flex items-center justify-between text-slate-400 mb-2 border-b border-white/10 pb-1">
+                <span>Dynamic UI Controls (A2UI v0.8)</span>
+                <span class="text-coral-400">Clean URLs</span>
+              </div>
+              <div class="flex items-center gap-2 mt-2">
+                <span class="px-2.5 py-1 rounded bg-coral-500/20 text-coral-300 text-[11px]">🔗 앱 실행하기</span>
+                <span class="px-2.5 py-1 rounded bg-brand-500/20 text-brand-300 text-[11px]">💻 Web IDE 열기</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Cross-Device Resume -->
+          <div class="card-glass rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative group">
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-3xl">devices</span>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-xs font-mono font-bold">KEY POINT #4</span>
+              </div>
+              <span class="text-xs font-mono text-brand-400 font-bold tracking-wider uppercase">FEATURE 04</span>
+              <h3 class="text-2xl font-bold text-white mt-1 mb-4">
+                크로스 디바이스 세션 연동 <br>
+                <span class="text-sm font-normal text-slate-400">(Seamless Session Resume)</span>
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                모바일 Gemini App에서 에이전트에게 코딩 지시를 내린 후 사무실 데스크톱 터미널에서 <code class="text-cyan-300 bg-slate-800 px-1.5 py-0.5 rounded">a2a-resume</code>를 실행하면
+                <strong class="text-white">동일한 대화 기록, 수정된 파일 내역, 컨텍스트 상태</strong>가 100% 이어져 즉각 디버깅이 가능합니다.
+              </p>
+            </div>
+            <div class="bg-slate-950/90 rounded-2xl p-4 border border-white/10 font-mono text-xs">
+              <div class="flex items-center justify-between text-slate-400 mb-2 border-b border-white/10 pb-1">
+                <span>Cloud Workstation Terminal Bridge</span>
+                <span class="text-brand-400">Sync Active</span>
+              </div>
+              <div class="text-slate-300 mt-1">$ a2a-resume --session active</div>
+              <div class="text-emerald-400 text-[11px] mt-1">✔ Restored history & workspace from ~/.a2a-sessions</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dedicated Video Tutorial Walkthrough Banner -->
+    <section class="py-16 px-4 sm:px-8 bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-900 border-y border-white/10">
+      <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="flex items-center gap-5">
+          <div class="w-16 h-16 rounded-2xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 flex-shrink-0">
+            <span class="material-symbols-outlined text-4xl">play_circle</span>
+          </div>
+          <div>
+            <span class="text-xs font-mono text-red-400 font-bold uppercase tracking-wider">VIDEO WALKTHROUGH & DEMO</span>
+            <h3 class="text-2xl font-bold text-white mt-1">아키텍처 실무 사용법 가이드 영상</h3>
+            <p class="text-sm text-slate-300 mt-1">
+              Gemini와 Claude 모델 스위칭, 그리고 A2UI 리치 콘솔 제어 실무 시연을 YouTube 영상으로 빠르게 확인하세요.
+            </p>
+          </div>
+        </div>
+        <a href="https://youtu.be/z9cTW6IyE10?si=5g_Mde-4st_aQYD9" target="_blank" rel="noopener noreferrer"
+           class="bg-red-600 hover:bg-red-500 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-red-600/25 transition-all flex items-center gap-2.5 flex-shrink-0">
+          <span class="material-symbols-outlined">play_arrow</span>
+          <span>사용법 가이드 재생하기</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Interactive A2UI & Multi-Model Simulator vs AS-IS Comparison -->
+    <section id="interactive-demo" class="py-24 px-4 sm:px-8 border-b border-white/5">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="text-xs font-mono font-semibold text-cyan-400 uppercase tracking-widest block mb-2">INTERACTIVE CONCEPT SIMULATOR</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            A2A 멀티모델 리치 콘솔 vs 기존 텍스트 콘솔
+          </h2>
+          <p class="text-slate-400 text-base">
+            원하는 모델(Gemini ↔ Claude)을 선택 호출하고 리치 위젯을 다루는 과정을 직접 시뮬레이션해 보세요.
+          </p>
+        </div>
+
+        <!-- Tab Controls -->
+        <div class="flex justify-center mb-8">
+          <div class="inline-flex p-1 bg-slate-900 rounded-2xl border border-white/10">
+            <button id="btn-tobe" onclick="switchDemoTab('tobe')" 
+                    class="px-6 py-3 rounded-xl font-semibold text-sm transition-all bg-gradient-to-r from-brand-600 to-cyan-600 text-white shadow-lg">
+              ✨ GE × Claude A2A 멀티모델 콘솔 (TO-BE)
+            </button>
+            <button id="btn-asis" onclick="switchDemoTab('asis')" 
+                    class="px-6 py-3 rounded-xl font-semibold text-sm transition-all text-slate-400 hover:text-white">
+              ❌ 단일 모델 / 일반 대화 텍스트 출력 (AS-IS)
+            </button>
+          </div>
+        </div>
+
+        <!-- TO-BE TAB VIEW -->
+        <div id="view-tobe" class="card-glass rounded-3xl p-6 sm:p-10 border-cyan-500/30">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 mb-6 border-b border-white/10 gap-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="font-mono text-xs uppercase text-cyan-400 tracking-wider">A2A Protocol Active</span>
+              <span class="text-xs text-slate-500 font-mono">| Dynamic Model Selector Ready</span>
+            </div>
+
+            <!-- Interactive Model Selector inside Simulator -->
+            <div class="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-white/10">
+              <span class="text-xs text-slate-400 px-2 font-mono">실시간 호출 LLM 선택:</span>
+              <button onclick="switchSimModel('gemini')" id="sim-btn-gemini" 
+                      class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition-all">
+                ⚡ Gemini LLM
+              </button>
+              <button onclick="switchSimModel('claude')" id="sim-btn-claude" 
+                      class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">
+                🧠 Claude LLM
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <!-- Left: Conversation output -->
+            <div class="lg:col-span-2 space-y-6">
+              <div class="p-5 rounded-2xl bg-slate-900/80 border border-white/5">
+                <div class="flex items-center justify-between mb-3">
+                  <span id="sim-agent-header" class="text-xs font-semibold text-cyan-400 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">smart_toy</span>
+                    Gemini LLM (A2A Agent Engine)
+                  </span>
+                  <span class="text-[11px] text-slate-500 font-mono">Workstation: #a2a-user-ws-01</span>
+                </div>
+                <p id="sim-agent-text" class="text-slate-200 text-sm leading-relaxed">
+                  선택하신 <strong class="text-cyan-300">Gemini LLM</strong> 모델 엔진이 날씨 애플리케이션의 리액트 컴포넌트를 초고속 분석 및 핫패치 완료했습니다. 
+                  동적 A2UI 컨트롤과 함께 즉시 확인하세요.
+                </p>
+                <!-- Tailored Hyperlinks -->
+                <div class="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-white/10">
+                  <a href="#quickstart" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 text-xs font-semibold border border-cyan-500/30 transition-colors">
+                    <span>🔗 [앱 실시간 브라우저 실행]</span>
+                  </a>
+                  <a href="#quickstart" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-500/10 hover:bg-brand-500/20 text-brand-300 text-xs font-semibold border border-brand-500/30 transition-colors">
+                    <span>💻 [Open in Cloud VS Code]</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Live Tailored A2UI Widget Simulator -->
+              <div class="p-6 rounded-2xl bg-slate-950 border border-white/10">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="text-xs font-mono text-slate-400 uppercase">동적 생성된 맞춤형 앱 제어 위젯</span>
+                  <span class="text-xs text-emerald-400 font-mono">Self-Healing JSON OK</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
+                  <div class="p-3 rounded-xl bg-slate-900 border border-cyan-500/30">
+                    <div class="text-xs text-slate-400">선택 도시</div>
+                    <div class="text-sm font-bold text-white mt-0.5">📍 서울특별시</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-slate-900 border border-white/5">
+                    <div class="text-xs text-slate-400">온도 단위</div>
+                    <div class="text-sm font-bold text-cyan-400 mt-0.5">°C (섭씨)</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-slate-900 border border-white/5 col-span-2 sm:col-span-1">
+                    <div class="text-xs text-slate-400">핫패치 상태</div>
+                    <div class="text-sm font-bold text-emerald-400 mt-0.5">✔ 반영 완료</div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-white/5 font-mono text-xs">
+                  <span id="sim-commit-msg" class="text-slate-400">$ git commit -m 'Feat: Multi-model A2A patch'</span>
+                  <span class="text-emerald-400 font-semibold">Synced</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Session logs -->
+            <div class="bg-slate-950 rounded-2xl p-5 border border-white/10 font-mono text-xs">
+              <div class="text-slate-500 mb-3 uppercase tracking-wider">Active A2A Engine Status</div>
+              <div class="space-y-3 text-slate-300">
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Selected Model:</span>
+                  <span id="sim-status-model" class="text-cyan-400 font-bold">Gemini LLM</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Protocol:</span>
+                  <span class="text-white">A2A JSON-RPC + SSE</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">JSON Parser:</span>
+                  <span class="text-emerald-400">Self-Healing Active</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Session Sync:</span>
+                  <span class="text-coral-300">~/.a2a-sessions</span>
+                </div>
+                <div class="border-t border-white/10 pt-3">
+                  <div class="text-slate-400 mb-1.5">Terminal Resume Command:</div>
+                  <div class="p-2 rounded bg-slate-900 text-emerald-400">$ a2a-resume --session active</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AS-IS TAB VIEW -->
+        <div id="view-asis" class="hidden card-glass rounded-3xl p-6 sm:p-10 border-red-500/20">
+          <div class="flex items-center gap-2 text-red-400 text-xs font-mono uppercase mb-6 pb-4 border-b border-white/10">
+            <span class="material-symbols-outlined text-base">warning</span>
+            <span>단일 모델 고정 한계 및 장문 URL 링크 / 취약한 JSON 파싱</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-6 rounded-2xl bg-slate-950 border border-red-500/20">
+              <span class="text-xs font-mono text-red-400 font-bold block mb-3">한계점 1: 모델 선택 불가능 & 장문 URL 나열</span>
+              <p class="text-xs text-slate-400 font-mono leading-relaxed mb-3">
+                "하나의 고정된 LLM만 호출할 수 있으며, 주소도 https://8080-workstation-xxxxx.cloudworkstations.dev/ 처럼 나열되어 가독성이 저하됩니다."
+              </p>
+              <div class="text-xs text-slate-500 italic">→ 작업 특성에 맞는 모델 동적 선택 불가 및 복잡한 링크 화면</div>
+            </div>
+            <div class="p-6 rounded-2xl bg-slate-950 border border-red-500/20">
+              <span class="text-xs font-mono text-red-400 font-bold block mb-3">한계점 2: LLM JSON 오타 시 흰 페이지 오류 발생</span>
+              <div class="text-xs font-mono text-red-300 bg-red-950/30 p-3 rounded mb-2">
+                Uncaught SyntaxError: Unexpected token '}' in JSON at position 402
+              </div>
+              <div class="text-xs text-slate-500 italic">→ 미세한 구문 에러 시 전체 화면 렌더링 중단</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Multi-Surface Channel Experience -->
+    <section id="multi-surface" class="py-24 px-4 sm:px-8 bg-slate-950/60 border-b border-white/5">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-mono font-semibold text-coral-400 uppercase tracking-widest block mb-2">MULTI-SURFACE CHANNELS</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            3가지 고유 채널, 하나의 일관된 대화 세션
+          </h2>
+          <p class="text-slate-400 text-base sm:text-lg">
+            모바일 챗, 사무실 브라우저, 전문 IDE 터미널을 유연하게 오가며 끊김 없는 코딩을 실현합니다.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Web Chat -->
+          <div class="p-8 rounded-3xl bg-gradient-to-b from-slate-900 to-slate-900/60 border border-white/10 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-semibold">
+                  <span class="material-symbols-outlined text-sm">desktop_windows</span>
+                  Web Chat
+                </span>
+                <span class="text-xs text-slate-500 font-mono">Gemini Enterprise</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3">브라우저 대화형 콘솔</h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                데스크톱 웹 채팅에서 기획을 지시하고 <strong class="text-white">Gemini ↔ Claude</strong> 모델을 선택하여 실시간 A2UI 카드로 관제합니다.
+              </p>
+            </div>
+            <ul class="space-y-3 border-t border-white/10 pt-6 text-sm text-slate-300">
+              <li class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-brand-400 text-lg">check_circle</span>
+                <span>A2UI v0.8 맞춤형 인터랙티브 위젯 출력</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-brand-400 text-lg">check_circle</span>
+                <span>실시간 앱 및 Web IDE 원클릭 하이퍼링크</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Mobile App -->
+          <div class="p-8 rounded-3xl bg-gradient-to-b from-slate-900 to-slate-900/60 border border-white/10 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-coral-500/20 text-coral-300 text-xs font-semibold">
+                  <span class="material-symbols-outlined text-sm">smartphone</span>
+                  Mobile App
+                </span>
+                <span class="text-xs text-slate-500 font-mono">On-The-Go</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3">이동 중 원격 코딩 제어</h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                이동 중에 모바일 제미나이 앱으로 음성/텍스트 지시를 내리면, AI 에이전트가 백그라운드에서 빌드와 테스트를 자율 수행합니다.
+              </p>
+            </div>
+            <ul class="space-y-3 border-t border-white/10 pt-6 text-sm text-slate-300">
+              <li class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-coral-400 text-lg">check_circle</span>
+                <span>모바일 최적화 A2UI 레이아웃 및 알림 지원</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-coral-400 text-lg">check_circle</span>
+                <span>원격 빌드·테스트 및 Git 배포 자율 완수</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Cloud Workstations IDE -->
+          <div class="p-8 rounded-3xl bg-gradient-to-b from-slate-900 to-slate-900/60 border border-white/10 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-semibold">
+                  <span class="material-symbols-outlined text-sm">terminal</span>
+                  Web IDE & Terminal
+                </span>
+                <span class="text-xs text-slate-500 font-mono">Cloud Workstations</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3">전체 개발 IDE 심층 작업</h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                사무실 도착 후 VS Code에 접속해 터미널에 <code class="text-cyan-300">a2a-resume</code>를 치면 대화 내역과 코드 수정을 그대로 이어받습니다.
+              </p>
+            </div>
+            <ul class="space-y-3 border-t border-white/10 pt-6 text-sm text-slate-300">
+              <li class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-cyan-400 text-lg">check_circle</span>
+                <span>~/.a2a-sessions 디렉토리 영구 세션 동기화</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-cyan-400 text-lg">check_circle</span>
+                <span>모든 파일 변경 내역 및 실행 컨텍스트 연동</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="py-24 px-4 sm:px-8 bg-slate-950/80 border-b border-white/5">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-mono font-semibold text-brand-400 uppercase tracking-widest block mb-2">SYSTEM ARCHITECTURE</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            엔터프라이즈 프라이빗 테넌트 구조
+          </h2>
+          <p class="text-slate-400 text-base sm:text-lg">
+            Google Cloud Private Sandbox 내에서 A2A 프로토콜이 Gemini와 Claude 모델을 어떻게 통제하는지 확인하세요.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+          <div class="p-6 rounded-2xl bg-slate-900 border border-brand-500/30 relative">
+            <span class="absolute top-4 right-4 text-xs font-mono text-brand-400 font-bold">STEP 01</span>
+            <div class="w-12 h-12 rounded-xl bg-brand-500/20 flex items-center justify-center text-brand-400 mb-4">
+              <span class="material-symbols-outlined text-2xl">chat</span>
+            </div>
+            <h4 class="font-bold text-white mb-2">Gemini Enterprise App</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              사용자 대화 및 모델 선택 메타데이터가 담긴 A2A JSON-RPC 전송.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-slate-900 border border-cyan-500/30 relative">
+            <span class="absolute top-4 right-4 text-xs font-mono text-cyan-400 font-bold">STEP 02</span>
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 mb-4">
+              <span class="material-symbols-outlined text-2xl">router</span>
+            </div>
+            <h4 class="font-bold text-white mb-2">Cloud Run Gateway</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              <code class="text-cyan-300">a2a-router</code>가 OAuth 토큰 검증 후 워크스테이션 자동 프로비저닝.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-slate-900 border border-coral-500/30 relative">
+            <span class="absolute top-4 right-4 text-xs font-mono text-coral-400 font-bold">STEP 03</span>
+            <div class="w-12 h-12 rounded-xl bg-coral-500/20 flex items-center justify-center text-coral-400 mb-4">
+              <span class="material-symbols-outlined text-2xl">terminal</span>
+            </div>
+            <h4 class="font-bold text-white mb-2">Cloud Workstation</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              격리 VM의 Local Executor가 지정된 LLM 모델(Gemini/Claude) SDK 프로세스 호출.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-slate-900 border border-emerald-500/30 relative">
+            <span class="absolute top-4 right-4 text-xs font-mono text-emerald-400 font-bold">STEP 04</span>
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
+              <span class="material-symbols-outlined text-2xl">memory</span>
+            </div>
+            <h4 class="font-bold text-white mb-2">Gemini & Claude API</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              선택된 모델의 고정밀 코드 수정 및 맞춤형 A2UI 카드 JSON 실시간 반환.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Start Section -->
+    <section id="quickstart" class="py-24 px-4 sm:px-8 border-b border-white/5">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-mono font-semibold text-cyan-400 uppercase tracking-widest block mb-2">QUICK START GUIDE</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            4단계 자동화 인프라 구축 가이드
+          </h2>
+          <p class="text-slate-400 text-base">
+            Terraform과 빌드 스크립트를 통해 엔터프라이즈 멀티모델 인프라를 손쉽게 배포할 수 있습니다.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="p-6 sm:p-8 rounded-3xl card-glass border border-white/10">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono text-cyan-400 font-bold">1단계: 인프라 배포 (Terraform)</span>
+              <button onclick="copyCode('code-tf', this)" class="text-xs font-mono text-slate-400 hover:text-white bg-slate-800 px-3 py-1 rounded-lg transition-colors">복사하기</button>
+            </div>
+            <pre id="code-tf" class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-slate-200 overflow-x-auto border border-white/5">cd terraform
+terraform init -backend-config="bucket=YOUR-TF-STATE-BUCKET"
+terraform apply -var="project_id=YOUR-GCP-PROJECT-ID"</pre>
+          </div>
+
+          <div class="p-6 sm:p-8 rounded-3xl card-glass border border-white/10">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono text-coral-400 font-bold">2단계: 워크스테이션 컨테이너 빌드</span>
+              <button onclick="copyCode('code-ws', this)" class="text-xs font-mono text-slate-400 hover:text-white bg-slate-800 px-3 py-1 rounded-lg transition-colors">복사하기</button>
+            </div>
+            <pre id="code-ws" class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-slate-200 overflow-x-auto border border-white/5">cd ../workstation-image
+PROJECT_ID=YOUR-GCP-PROJECT-ID ./build.sh</pre>
+          </div>
+
+          <div class="p-6 sm:p-8 rounded-3xl card-glass border border-white/10">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono text-brand-400 font-bold">3단계: Cloud Run 라우터 배포</span>
+              <button onclick="copyCode('code-router', this)" class="text-xs font-mono text-slate-400 hover:text-white bg-slate-800 px-3 py-1 rounded-lg transition-colors">복사하기</button>
+            </div>
+            <pre id="code-router" class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-slate-200 overflow-x-auto border border-white/5">cd ../a2a-router
+PROJECT_ID=YOUR-GCP-PROJECT-ID ./deploy.sh</pre>
+          </div>
+
+          <div class="p-6 sm:p-8 rounded-3xl card-glass border border-white/10">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono text-emerald-400 font-bold">4단계: 에이전트 카드 등록</span>
+              <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded">Console</span>
+            </div>
+            <div class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-cyan-300 overflow-x-auto border border-white/5">
+              https://&lt;YOUR-CLOUD-RUN-URL&gt;/.well-known/agent-card.json
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-12 px-4 sm:px-8 bg-slate-950 border-t border-white/10 text-center">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-300">GE × Claude Code (A2A Multi-Model)</span>
+        <span>•</span>
+        <span>Apache 2.0 Licensed</span>
+      </div>
+      <div>
+        <a href="https://github.com/ldu1225/ge-claude-a2a.git" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-400 transition-colors">
+          https://github.com/ldu1225/ge-claude-a2a.git
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function switchDemoTab(tabName) {
+      const viewTobe = document.getElementById('view-tobe');
+      const viewAsis = document.getElementById('view-asis');
+      const btnTobe = document.getElementById('btn-tobe');
+      const btnAsis = document.getElementById('btn-asis');
+
+      if (tabName === 'tobe') {
+        viewTobe.classList.remove('hidden');
+        viewAsis.classList.add('hidden');
+        btnTobe.className = 'px-6 py-3 rounded-xl font-semibold text-sm transition-all bg-gradient-to-r from-brand-600 to-cyan-600 text-white shadow-lg';
+        btnAsis.className = 'px-6 py-3 rounded-xl font-semibold text-sm transition-all text-slate-400 hover:text-white';
+      } else {
+        viewAsis.classList.remove('hidden');
+        viewTobe.classList.add('hidden');
+        btnAsis.className = 'px-6 py-3 rounded-xl font-semibold text-sm transition-all bg-gradient-to-r from-red-600 to-coral-600 text-white shadow-lg';
+        btnTobe.className = 'px-6 py-3 rounded-xl font-semibold text-sm transition-all text-slate-400 hover:text-white';
+      }
+    }
+
+    function switchSimModel(modelType) {
+      const btnGemini = document.getElementById('sim-btn-gemini');
+      const btnClaude = document.getElementById('sim-btn-claude');
+      const headerElem = document.getElementById('sim-agent-header');
+      const textElem = document.getElementById('sim-agent-text');
+      const statusElem = document.getElementById('sim-status-model');
+
+      if (modelType === 'gemini') {
+        btnGemini.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition-all';
+        btnClaude.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all';
+        headerElem.innerHTML = '<span class="material-symbols-outlined text-sm">smart_toy</span> Gemini LLM (A2A Agent Engine)';
+        textElem.innerHTML = '선택하신 <strong class="text-cyan-300">Gemini LLM</strong> 모델 엔진이 날씨 애플리케이션의 리액트 컴포넌트를 초고속 분석 및 핫패치 완료했습니다. 동적 A2UI 컨트롤과 함께 즉시 확인하세요.';
+        statusElem.innerText = 'Gemini LLM';
+        statusElem.className = 'text-cyan-400 font-bold';
+      } else {
+        btnClaude.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-coral-500/20 text-coral-300 border border-coral-500/40 transition-all';
+        btnGemini.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all';
+        headerElem.innerHTML = '<span class="material-symbols-outlined text-sm">smart_toy</span> Claude LLM / Claude Code (A2A Agent Engine)';
+        textElem.innerHTML = '선택하신 <strong class="text-coral-300">Claude LLM</strong> 모델 엔진이 정밀한 코드 리팩토링 및 엣지케이스 디버깅 패치를 적용했습니다. 동적 A2UI 컨트롤과 함께 즉시 확인하세요.';
+        statusElem.innerText = 'Claude LLM';
+        statusElem.className = 'text-coral-400 font-bold';
+      }
+    }
+
+    function copyCode(elementId, btnElem) {
+      const codeText = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(codeText).then(() => {
+        const originalText = btnElem.innerText;
+        btnElem.innerText = '✔ 복사됨';
+        btnElem.classList.add('text-emerald-400');
+        setTimeout(() => {
+          btnElem.innerText = originalText;
+          btnElem.classList.remove('text-emerald-400');
+        }, 1500);
+      });
+    }
+
+    function copyFeaturedPrompt(btnElem) {
+      const text = document.getElementById('featured-prompt-text').innerText.replace(/^"|"$/g, '');
+      navigator.clipboard.writeText(text).then(() => {
+        const origText = btnElem.innerHTML;
+        btnElem.innerHTML = '<span class="material-symbols-outlined text-base">check</span><span>✔ 복사 완료!</span>';
+        btnElem.classList.add('from-emerald-600', 'to-emerald-500');
+        setTimeout(() => {
+          btnElem.innerHTML = origText;
+          btnElem.classList.remove('from-emerald-600', 'to-emerald-500');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

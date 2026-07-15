@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BigQuery Conversational Analytics Agent Guide - Gemini Enterprise Integration</title>
+
+  <!-- Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Hanken+Grotesk:wght@500;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet">
+
+  <style>
+    @layer base {
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        overscroll-behavior: none;
+        background: radial-gradient(circle at 50% -20%, #e8f0fe 0%, #f8f9fa 45%);
+        min-height: 100vh;
+        font-family: 'Noto Sans KR', 'Plus Jakarta Sans', sans-serif;
+      }
+
+      main> :first-child {
+        margin-top: 0 !important;
+      }
+
+      main> :last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f3f4;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #c1c7cd;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9aa0a6;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #1a73e8 0%, #0b57d0 50%, #681da8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .ui-mockup-shadow {
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+  </style>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1a73e8",
+            "primary-dark": "#0b57d0",
+            "primary-container": "#e8f0fe",
+            "on-primary": "#ffffff",
+            "secondary": "#129eaf",
+            "secondary-container": "#e0f7fa",
+            "tertiary": "#681da8",
+            "tertiary-container": "#f3e8ff",
+            "surface": "#f8f9fa",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f1f3f4",
+            "surface-container": "#e8eaed",
+            "surface-container-high": "#dadce0",
+            "on-surface": "#202124",
+            "on-surface-variant": "#5f6368",
+            "outline": "#80868b",
+            "outline-variant": "#e0e0e0"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            full: "9999px"
+          },
+          spacing: {
+            "stack-lg": "32px",
+            "margin-desktop": "40px",
+            "margin-mobile": "16px",
+            "stack-md": "16px",
+            "container-max": "1280px",
+            "gutter": "24px",
+            "stack-sm": "8px"
+          },
+          fontFamily: {
+            "headline-lg": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+            "body-md": ["Noto Sans KR", "Plus Jakarta Sans", "sans-serif"],
+            "body-lg": ["Noto Sans KR", "Plus Jakarta Sans", "sans-serif"],
+            "headline-md": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+            "display-lg": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+            "label-technical": ["Hanken Grotesk", "sans-serif"]
+          },
+          fontSize: {
+            "headline-lg": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
+            "body-md": ["14px", { lineHeight: "1.6", fontWeight: "400" }],
+            "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+            "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "500" }],
+            "display-lg": ["44px", { lineHeight: "1.25", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "label-technical": ["12px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="font-body-md text-on-surface antialiased">
+
+  <!-- Fixed Header Navigation -->
+  <header class="fixed top-0 left-0 right-0 z-50 pt-4 px-margin-desktop">
+    <div
+      class="max-w-container-max mx-auto flex items-center justify-between h-16 bg-surface-container-lowest/70 backdrop-blur-xl border border-white/60 rounded-full px-8 shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-md">
+          <span class="material-symbols-outlined text-on-primary text-[22px]">database</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-headline-md text-base font-bold text-on-surface leading-tight">BigQuery CA Agent</span>
+          <span class="text-[11px] text-primary font-medium tracking-wide">Gemini Enterprise Integration</span>
+        </div>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 font-medium">
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-semibold"
+          href="#home">Home</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm"
+          href="#description">Description</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm"
+          href="#technical-architecture">Architecture</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#workflow">Workflow &
+          Screenshots</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#prompts">Prompts</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#demo">Demo & Agents</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <span
+          class="bg-primary-container text-primary px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase">Enterprise
+          Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-20">
+    <div class="flex flex-col w-full relative">
+
+      <!-- Hero Section (#home) -->
+      <section class="px-margin-desktop py-20 relative overflow-hidden" id="home">
+        <div class="max-w-container-max mx-auto relative z-10">
+          <div class="flex flex-col lg:flex-row items-center gap-12">
+            <div class="flex-1 flex flex-col gap-5">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-container text-primary text-xs font-semibold tracking-wide w-fit">
+                <span class="material-symbols-outlined text-sm">auto_awesome</span>
+                <span>Gemini Enterprise App Integration</span>
+              </div>
+              <h1 class="font-display-lg text-display-lg text-on-surface max-w-3xl">
+                BigQuery <br>
+                <span class="gradient-text">Conversational Analytics Agent</span>
+              </h1>
+              <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                복잡한 SQL 구문을 알 필요 없이, </br>자연어 대화를 통해 BigQuery 데이터를 조회하고 분석할 수 있는 에이전트를,</br>Gemini Enterprise App과
+                연동해 보세요!
+              </p>
+              <div class="flex flex-wrap items-center gap-4 pt-4">
+                <a href="#workflow"
+                  class="bg-primary text-on-primary font-semibold py-3 px-8 rounded-full text-sm shadow-md hover:bg-primary-dark transition-all flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">wallpaper</span>
+                  <span>연동 가이드 & 4단계 콘솔 화면 보기</span>
+                </a>
+                <a href="#prompts"
+                  class="bg-surface-container-lowest text-on-surface border border-outline-variant font-semibold py-3 px-8 rounded-full text-sm hover:bg-surface-container-low transition-all flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">chat_bubble</span>
+                  <span>프롬프트 샘플</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Hero Feature Cards -->
+            <div class="w-full lg:w-[460px] grid grid-cols-1 gap-4">
+              <div class="glass-card p-6 rounded-2xl shadow-sm border border-white/80 flex items-start gap-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-primary-container text-primary flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-2xl">code_off</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-on-surface text-base mb-1">NL-to-SQL</h4>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">자연어 질의를 고성능 SQL로 자동 변환하여</br> 데이터 엔지니어 대기
+                    시간
+                    Zero화</p>
+                </div>
+              </div>
+
+              <div class="glass-card p-6 rounded-2xl shadow-sm border border-white/80 flex items-start gap-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-secondary-container text-secondary flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-2xl">shield_lock</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-on-surface text-base mb-1">GCP IAM & 보안 승계</h4>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">OAuth 커넥터 기반으로 사용자 본인의 </br> IAM 권한을 전달하여
+                    엄격한 보안
+                    유지</p>
+                </div>
+              </div>
+
+              <div class="glass-card p-6 rounded-2xl shadow-sm border border-white/80 flex items-start gap-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-tertiary-container text-tertiary flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-2xl">verified</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-on-surface text-base mb-1">Knowledge Catalog Grounding</h4>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">전사 표준 메타데이터 및 Verified Queries 기반으로</br>
+                    정합성 있는 SQL 실행</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Description Section (#description) -->
+      <section class="px-margin-desktop py-16" id="description">
+        <div class="max-w-container-max mx-auto">
+          <div
+            class="bg-surface-container-lowest rounded-[32px] p-8 lg:p-12 shadow-sm border border-outline-variant/40">
+            <div class="flex flex-col gap-6">
+              <div>
+                <span class="font-label-technical text-label-technical text-primary uppercase tracking-[0.2em]">Agent
+                  Overview</span>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mt-1">Description & Key Pillars</h2>
+              </div>
+              <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed max-w-4xl">
+                Gemini Enterprise에 연동된 <strong>BigQuery Conversational Agent</strong>는 사용자가 SQL을 배우지 않아도,</br>일상적인 자연어로
+                질문하면 즉각적으로 지능적 쿼리를 실행하고 검증된 인사이트를 제공합니다.
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                <div
+                  class="p-6 rounded-2xl bg-surface-container-low flex flex-col gap-3 border border-outline-variant/30 hover:border-primary/50 transition-all">
+                  <div class="w-10 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined">psychology</span>
+                  </div>
+                  <h3 class="font-bold text-lg text-on-surface">분석 대기 시간 단축</h3>
+                  <p class="text-sm text-on-surface-variant leading-relaxed">
+                    수일 이상 소요되던 데이터 분석 및 리포트 작성 대기 시간을 수초~수분 단위로 단축하여 의사결정 속도를 끌어올립니다.
+                  </p>
+                </div>
+                <div
+                  class="p-6 rounded-2xl bg-surface-container-low flex flex-col gap-3 border border-outline-variant/30 hover:border-primary/50 transition-all">
+                  <div class="w-10 h-10 rounded-lg bg-secondary text-on-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined">groups</span>
+                  </div>
+                  <h3 class="font-bold text-lg text-on-surface">전사 데이터 민주화</h3>
+                  <p class="text-sm text-on-surface-variant leading-relaxed">
+                    데이터 엔지니어링 지식이 없어도 비즈니스 담당자 누구나 데이터에 접근하고 즉각 탐색할 수 있는 데이터 문화 구축합니다.
+                  </p>
+                </div>
+                <div
+                  class="p-6 rounded-2xl bg-surface-container-low flex flex-col gap-3 border border-outline-variant/30 hover:border-primary/50 transition-all">
+                  <div class="w-10 h-10 rounded-lg bg-tertiary text-on-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined">verified</span>
+                  </div>
+                  <h3 class="font-bold text-lg text-on-surface">검증된 정확성 & 맥락</h3>
+                  <p class="text-sm text-on-surface-variant leading-relaxed">
+                    System Instructions 및 Knowledge Catalog 기반 메타데이터 Grounding를 통해 SQL 오류 및 환각을 최소화합니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Technical Architecture Section (#technical-architecture) -->
+      <section class="px-margin-desktop py-16 bg-surface-container-low/60" id="technical-architecture">
+        <div class="max-w-container-max mx-auto">
+          <div class="flex flex-col items-center text-center mb-12">
+            <span class="font-label-technical text-label-technical text-primary uppercase tracking-[0.2em]">System
+              Architecture</span>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mt-1">Technical Architecture</h2>
+            <p class="font-body-md text-on-surface-variant max-w-2xl mt-2">
+              Gemini Enterprise App(GE App)의 대화형 인터페이스와 BigQuery Studio의 데이터 에이전트 엔진이 A2A(Agent-to-Agent) 및 OAuth IAM
+              체계로 밀접하게 결합된
+              아키텍처입니다.
+            </p>
+          </div>
+
+          <!-- Architecture Map -->
+          <div class="bg-surface-container-lowest p-8 rounded-[32px] shadow-sm border border-outline-variant/40 mb-10">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 relative">
+              <div class="flex flex-col p-6 rounded-2xl bg-primary-container/40 border border-primary/20">
+                <div class="flex items-center gap-3 mb-4">
+                  <span class="material-symbols-outlined text-primary text-2xl">person</span>
+                  <h4 class="font-bold text-on-surface text-base">1. GE App UI</h4>
+                </div>
+                <ul class="text-xs text-on-surface-variant flex flex-col gap-2 leading-relaxed">
+                  <li class="flex items-start gap-1.5"><span class="text-primary font-bold">•</span> 비즈니스 사용자 대화 인터페이스
+                  </li>
+                  <li class="flex items-start gap-1.5"><span class="text-primary font-bold">•</span> OAuth Token 및 사용자
+                    Identity 보유</li>
+                  <li class="flex items-start gap-1.5"><span class="text-primary font-bold">•</span> 대화형 에이전트 호스팅 인터페이스
+                  </li>
+                </ul>
+              </div>
+
+              <div class="flex flex-col p-6 rounded-2xl bg-secondary-container/40 border border-secondary/20">
+                <div class="flex items-center gap-3 mb-4">
+                  <span class="material-symbols-outlined text-secondary text-2xl">hub</span>
+                  <h4 class="font-bold text-on-surface text-base">2. GE App & A2A</h4>
+                </div>
+                <ul class="text-xs text-on-surface-variant flex flex-col gap-2 leading-relaxed">
+                  <li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> A2A
+                    (Agent-to-Agent) 프로토콜 프로비저닝</li>
+                  <li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Admin 승인 및 사용자
+                    그룹별 권한 제어</li>
+                  <li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> 안전한 Context &
+                    Query 전달</li>
+                </ul>
+              </div>
+
+              <div class="flex flex-col p-6 rounded-2xl bg-tertiary-container/40 border border-tertiary/20">
+                <div class="flex items-center gap-3 mb-4">
+                  <span class="material-symbols-outlined text-tertiary text-2xl">smart_toy</span>
+                  <h4 class="font-bold text-on-surface text-base">3. BQ CA Engine</h4>
+                </div>
+                <ul class="text-xs text-on-surface-variant flex flex-col gap-2 leading-relaxed">
+                  <li class="flex items-start gap-1.5"><span class="text-tertiary font-bold">•</span> NL-to-SQL 변환
+                    엔진</li>
+                  <li class="flex items-start gap-1.5"><span class="text-tertiary font-bold">•</span> System
+                    Instructions & Verified Queries</li>
+                  <li class="flex items-start gap-1.5"><span class="text-tertiary font-bold">•</span> Knowledge Catalog
+                    용어 기반 Grounding</li>
+                </ul>
+              </div>
+
+              <div class="flex flex-col p-6 rounded-2xl bg-surface-container-high/60 border border-outline/20">
+                <div class="flex items-center gap-3 mb-4">
+                  <span class="material-symbols-outlined text-on-surface text-2xl">database</span>
+                  <h4 class="font-bold text-on-surface text-base">4. BigQuery & Audit</h4>
+                </div>
+                <ul class="text-xs text-on-surface-variant flex flex-col gap-2 leading-relaxed">
+                  <li class="flex items-start gap-1.5"><span class="text-on-surface font-bold">•</span> BigQuery 테이블, 뷰
+                    실행</li>
+                  <li class="flex items-start gap-1.5"><span class="text-on-surface font-bold">•</span> 사용자 IAM 권한 검증
+                  </li>
+                  <li class="flex items-start gap-1.5"><span class="text-on-surface font-bold">•</span> BigQuery Audit
+                    Log (Job History) 추적</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workflow & Integration Section with 4 Popup Screen Images (#workflow) -->
+      <section class="px-margin-desktop py-16" id="workflow">
+        <div class="max-w-container-max mx-auto">
+          <div class="flex flex-col gap-2 mb-12">
+            <span class="font-label-technical text-label-technical text-primary uppercase tracking-[0.2em]">Step-by-step
+              Guide & Screen Screenshots</span>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface">Gemini Enterprise App 연동 및 사용 프로세스 (전체 4단계 화면
+              가이드)
+            </h2>
+          </div>
+
+          <div class="space-y-10">
+
+            <!-- Step 1 Card -->
+            <div
+              class="bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/40 shadow-sm relative overflow-hidden">
+              <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-6">
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 rounded-2xl bg-primary text-on-primary font-bold text-xl flex items-center justify-center shadow-md">
+                    1</div>
+                  <div>
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">데이터 엔지니어 / 분석가 영역</span>
+                    <h3 class="font-headline-md text-xl font-bold text-on-surface">1단계: BigQuery Studio에서 대화형 에이전트 생성 및
+                      지식 소스 설정</h3>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div
+                  class="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/20 flex flex-col gap-2">
+                  <div class="flex items-center gap-2 text-primary font-bold text-base">
+                    <span class="material-symbols-outlined text-lg">auto_mode</span>
+                    <span>에이전트 생성 및 지식 소스 지정</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    BigQuery Studio 'Agent Catalog' 메뉴에서 대화형 에이전트를 생성하고,</br>분석 대상이 될 테이블 및 뷰를 지식 소스로 지정합니다.
+                  </p>
+                </div>
+
+                <div
+                  class="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/20 flex flex-col gap-2">
+                  <div class="flex items-center gap-2 text-primary font-bold text-base">
+                    <span class="material-symbols-outlined text-lg">tune</span>
+                    <span>품질 고도화 (Instructions & Verified Queries)</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    <strong>System Instructions</strong>(시스템 지침)을 등록하고 자주 사용하는 쿼리를 <strong>Verified Queries</strong>로
+                    설정하여 답변 정확도를 극대화합니다.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 1단계 2개 화면 썸네일 카드 렌더링 -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                  class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30 flex items-center justify-between cursor-pointer group hover:border-primary transition-all"
+                  onclick="openModalByIndex(0)">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-16 h-12 bg-surface-container-high rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant relative">
+                      <img src="bigquery-agent-overview.png" alt="BigQuery Agent Overview Thumbnail"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-xs text-on-surface group-hover:text-primary transition-colors">[화면 1]
+                        BigQuery Agent Overview 콘솔</h4>
+                      <p class="text-[11px] text-on-surface-variant">bigquery-agent-overview.png (클릭 시 확대)</p>
+                    </div>
+                  </div>
+                  <span
+                    class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">zoom_in</span>
+                </div>
+
+                <div
+                  class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30 flex items-center justify-between cursor-pointer group hover:border-primary transition-all"
+                  onclick="openModalByIndex(1)">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-16 h-12 bg-surface-container-high rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant relative">
+                      <img src="bigquery-agent-edit.png" alt="BigQuery Agent Edit Thumbnail"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-xs text-on-surface group-hover:text-primary transition-colors">[화면 2]
+                        BigQuery Agent 지침/검증쿼리 편집</h4>
+                      <p class="text-[11px] text-on-surface-variant">bigquery-agent-edit.png (클릭 시 확대)</p>
+                    </div>
+                  </div>
+                  <span
+                    class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">zoom_in</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 Card -->
+            <div
+              class="bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/40 shadow-sm relative overflow-hidden">
+              <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-6">
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 rounded-2xl bg-secondary text-on-primary font-bold text-xl flex items-center justify-center shadow-md">
+                    2</div>
+                  <div>
+                    <span class="text-xs font-bold text-secondary uppercase tracking-wider">운영자 & 관리자 영역</span>
+                    <h3 class="font-headline-md text-xl font-bold text-on-surface">2단계: Gemini Enterprise A2A 에이전트 연동 및
+                      JSON 스키마 명세</h3>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div
+                  class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/20 flex flex-col gap-2">
+                  <div class="flex items-center gap-2 text-secondary font-bold text-sm">
+                    <span class="material-symbols-outlined text-base">how_to_reg</span>
+                    <span>A2A 연동 및 승인</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Gemini Enterprise 관리 콘솔에서 A2A (Agent-to-Agent) 에이전트를 등록 및 사용 권한을 프로비저닝합니다.
+                  </p>
+                </div>
+
+                <div
+                  class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/20 flex flex-col gap-2">
+                  <div class="flex items-center gap-2 text-secondary font-bold text-sm">
+                    <span class="material-symbols-outlined text-base">code</span>
+                    <span>Agent JSON Spec 검증</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    BigQuery에서 정의된 에이전트의 OpenAPI 및 Agent JSON 스키마 명세를 검증하고 설정을 완료합니다.
+                  </p>
+                </div>
+
+                <div
+                  class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/20 flex flex-col gap-2">
+                  <div class="flex items-center gap-2 text-secondary font-bold text-sm">
+                    <span class="material-symbols-outlined text-base">group_add</span>
+                    <span>사용자 그룹 공유</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    에이전트를 활용할 특정 비즈니스 사용자 그룹 혹은 개별 사용자에게 접근 권한 공유.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 2단계 2개 화면 썸네일 카드 렌더링 -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                  class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30 flex items-center justify-between cursor-pointer group hover:border-secondary transition-all"
+                  onclick="openModalByIndex(2)">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-16 h-12 bg-surface-container-high rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant relative">
+                      <img src="ge-agent-a2a.png" alt="Gemini Enterprise A2A Integration Thumbnail"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-xs text-on-surface group-hover:text-secondary transition-colors">[화면 3]
+                        Gemini Enterprise A2A 연동 콘솔</h4>
+                      <p class="text-[11px] text-on-surface-variant">ge-agent-a2a.png (클릭 시 확대)</p>
+                    </div>
+                  </div>
+                  <span
+                    class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">zoom_in</span>
+                </div>
+
+                <div
+                  class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30 flex items-center justify-between cursor-pointer group hover:border-secondary transition-all"
+                  onclick="openModalByIndex(3)">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-16 h-12 bg-surface-container-high rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant relative">
+                      <img src="ge-agent-json.png" alt="Gemini Enterprise Agent JSON Spec Thumbnail"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-xs text-on-surface group-hover:text-secondary transition-colors">[화면 4]
+                        Gemini Enterprise Agent JSON 스키마</h4>
+                      <p class="text-[11px] text-on-surface-variant">ge-agent-json.png (클릭 시 확대)</p>
+                    </div>
+                  </div>
+                  <span
+                    class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">zoom_in</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 Card -->
+            <div
+              class="bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/40 shadow-sm relative overflow-hidden">
+              <div class="flex items-center gap-4 mb-6">
+                <div
+                  class="w-12 h-12 rounded-2xl bg-tertiary text-on-primary font-bold text-xl flex items-center justify-center shadow-md">
+                  3</div>
+                <div>
+                  <span class="text-xs font-bold text-tertiary uppercase tracking-wider">비즈니스 사용자 영역</span>
+                  <h3 class="font-headline-md text-xl font-bold text-on-surface">3단계: Gemini Enterprise 대화창에서 자연어로 데이터
+                    활용</h3>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div
+                  class="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/20 flex flex-col gap-3">
+                  <div class="flex items-center gap-2 text-tertiary font-bold text-base">
+                    <span class="material-symbols-outlined text-lg">chat</span>
+                    <span>자연어 대화 및 쿼리</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Gemini Enterprise 대화 창에서 업무 중 궁금한 점을 자연어로 질의합니다. <br>
+                    <em>예시: "지난달 품목별 평균 판매 가격이 가장 높았던 장비는 무엇인가요?"</em>
+                  </p>
+                </div>
+
+                <div
+                  class="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/20 flex flex-col gap-3">
+                  <div class="flex items-center gap-2 text-tertiary font-bold text-base">
+                    <span class="material-symbols-outlined text-lg">table_chart</span>
+                    <span>실시간 SQL 생성 및 시각적 리포팅</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    에이전트가 변환한 최적의 BigQuery SQL이 실행되어 시각적 테이블과 핵심 인사이트 요약 결과가 대화창에 즉시 제공됩니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+        </div>
+      </section>
+
+
+
+      <!-- Prompt Samples Section (#prompts) -->
+      <section class="px-margin-desktop py-16" id="prompts">
+        <div class="max-w-container-max mx-auto">
+          <div class="flex flex-col items-center text-center mb-12">
+            <span class="font-label-technical text-label-technical text-primary uppercase tracking-[0.2em]">Prompt
+              Library</span>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mt-1">Prompt Samples & Examples</h2>
+            <p class="font-body-md text-on-surface-variant max-w-2xl mt-2">
+              Gemini Enterprise 대화창에 직접 입력하여 사용할 수 있는 추천 프롬프트 및 대화 시작 가이드입니다.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Option 1: 탐색형 질문 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-all">
+              <div>
+                <div class="flex items-center gap-2 mb-3 text-primary font-bold text-sm">
+                  <span class="material-symbols-outlined text-base">waving_hand</span>
+                  <span>1. 탐색형 첫 질문 (역할 파악)</span>
+                </div>
+                <h4 class="font-bold text-on-surface text-base mb-3">어떤 질문을 던져야 할지 모를 때</h4>
+                <div class="bg-surface-container-low p-4 rounded-2xl font-mono text-xs text-on-surface border border-outline-variant/30 font-semibold leading-relaxed">
+                  "안녕 어떤 질문을 할수있는 agent야?"
+                </div>
+              </div>
+              <div class="mt-4 pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant">
+                <span>역할 & 데이터 범위 조회</span>
+                <span class="text-primary font-semibold">탐색형 질문</span>
+              </div>
+            </div>
+
+            <!-- Option 2: 일반 분석 질문 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-secondary/50 transition-all">
+              <div>
+                <div class="flex items-center gap-2 mb-3 text-secondary font-bold text-sm">
+                  <span class="material-symbols-outlined text-base">analytics</span>
+                  <span>2. 일반 통계 & 순위 질문</span>
+                </div>
+                <h4 class="font-bold text-on-surface text-base mb-3">즉각적인 핵심 지표 & Top-N 집계</h4>
+                <div class="bg-surface-container-low p-4 rounded-2xl font-mono text-xs text-on-surface border border-outline-variant/30 font-semibold leading-relaxed">
+                  "가장 많은 매출을 올린 상위 5개 의약품과 그 제조사는 어디인가요?"
+                </div>
+              </div>
+              <div class="mt-4 pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant">
+                <span>BigQuery SQL 자동 집계</span>
+                <span class="text-secondary font-semibold">일반 분석</span>
+              </div>
+            </div>
+
+            <!-- Option 3: ML 예측 & 시각화 질문 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-tertiary/50 transition-all relative overflow-hidden">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-1.5 text-tertiary font-bold text-sm">
+                    <span class="material-symbols-outlined text-base">psychology</span>
+                    <span>3. ML 예측 & 시각화 질문</span>
+                  </div>
+                  <span class="bg-tertiary-container text-tertiary text-xs font-bold px-2.5 py-0.5 rounded-full">BigQuery ML</span>
+                </div>
+                <h4 class="font-bold text-on-surface text-base mb-3">미래 트렌드 & 수요 예측 차트</h4>
+                <div class="bg-surface-container-low p-4 rounded-2xl font-mono text-xs text-on-surface border border-outline-variant/30 font-semibold leading-relaxed">
+                  "향후 몇 달간 특정 의약품이나 전체 주문량의 추세는 어떻게 변화할까요? 그래프로도 보여줘."
+                </div>
+              </div>
+              <div class="mt-4 pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant">
+                <span>ML 시계열 예측 + Graph</span>
+                <span class="text-tertiary font-semibold">심층 예측</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Demo Video & Included Demo Agents Section (#demo) -->
+      <section class="px-margin-desktop py-16 bg-surface-container-low/60" id="demo">
+        <div class="max-w-container-max mx-auto">
+          <div class="flex flex-col items-center text-center mb-12">
+            <span class="font-label-technical text-label-technical text-primary uppercase tracking-[0.2em]">Interactive Demo & Agents</span>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mt-1">Live Demo Walkthrough & Included Agents</h2>
+            <p class="font-body-md text-on-surface-variant max-w-2xl mt-2">
+              본 가이드 문서 및 시뮬레이션 환경에 탑재된 특화 Demo Agent 구성과 실제 작동 데모 영상입니다.
+            </p>
+          </div>
+
+          <!-- Included Demo Agents Info Cards -->
+          <div class="mb-12">
+            <div class="bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/40 shadow-sm">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 pb-6 border-b border-outline-variant/30">
+                <div>
+                  <span class="text-xs font-bold text-primary tracking-wider uppercase">Included Demo Agents</span>
+                  <h3 class="font-headline-md text-xl font-bold text-on-surface mt-1">탑재된 비즈니스 특화 Demo Agent</h3>
+                </div>
+                <span class="bg-primary-container text-primary text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-sm">verified</span>
+                  BigQuery CA-Table Spec Verified
+                </span>
+              </div>
+              
+              <p class="text-sm text-on-surface-variant leading-relaxed mb-6">
+                해당 HTML 가이드 및 연동 환경에 포함된 <strong class="text-on-surface">Demo Agent</strong>는 산업별 실무 데이터를 즉각 분석할 수 있도록 다음 3가지 특화 모델로 제공됩니다:
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:border-primary/50 transition-all flex flex-col gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary-container text-primary flex items-center justify-center font-bold">
+                      <span class="material-symbols-outlined">vaccines</span>
+                    </div>
+                    <h4 class="font-bold text-on-surface text-base">(CA-Table) 제약</h4>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    임상 데이터, 의약품 재고, 생산 품질 및 규제 준수(Compliance) 지표를 자연어로 정밀 분석하는 제약 특화 에이전트.
+                  </p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:border-primary/50 transition-all flex flex-col gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-secondary-container text-secondary flex items-center justify-center font-bold">
+                      <span class="material-symbols-outlined">shopping_cart</span>
+                    </div>
+                    <h4 class="font-bold text-on-surface text-base">(CA-Table) 이커머스</h4>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    고객 주문 트렌드, 장바구니 전환율, 품목별 매출 및 물류/배송 지연 지표를 즉각 진단하는 유통/이커머스 에이전트.
+                  </p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:border-primary/50 transition-all flex flex-col gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-tertiary-container text-tertiary flex items-center justify-center font-bold">
+                      <span class="material-symbols-outlined">flight_takeoff</span>
+                    </div>
+                    <h4 class="font-bold text-on-surface text-base">(CA-Table) 항공</h4>
+                  </div>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    노선별 정시 운송률(OTP), 항공기 정비 주기, 승객 예약 현황 및 연료 효율 데이터를 종합 분석하는 항공 산업 특화 에이전트.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Demo Video Placeholder -->
+          <div class="bg-surface-container-lowest p-8 lg:p-12 rounded-[32px] border border-outline-variant/40 shadow-sm flex flex-col items-center justify-center relative overflow-hidden group">
+            <div class="flex flex-col items-center text-center max-w-2xl mb-8">
+              <span class="bg-secondary-container text-secondary text-xs font-bold px-3 py-1 rounded-full mb-3">Video Walkthrough</span>
+              <h3 class="font-headline-md text-2xl font-bold text-on-surface">BigQuery CA Agent 동작 데모 영상</h3>
+              <p class="text-xs text-on-surface-variant mt-2">
+              아래 플레이어에서 실제 Gemini Enterprise 대화창 및 BigQuery CA Agent의 실시간 질의응답 시연 영상을 확인하실 수 있습니다.
+            </p>
+          </div>
+
+          <!-- Live Demo Video Player (16:9 Aspect Ratio) -->
+          <div class="w-full max-w-4xl aspect-video bg-slate-950 rounded-2xl border border-outline-variant/30 overflow-hidden shadow-2xl hover:border-primary/60 transition-all relative">
+            <video controls preload="metadata" playsinline
+              class="w-full h-full object-contain bg-black rounded-2xl">
+              <source src="https://storage.googleapis.com/public-gemini-docs-gomdols-cloud/bq-ca-agent-table/Screen%20Recording%202026-07-13%20at%201.18.38%E2%80%AFAM.mov" type="video/mp4">
+              <source src="https://storage.googleapis.com/public-gemini-docs-gomdols-cloud/bq-ca-agent-table/Screen%20Recording%202026-07-13%20at%201.18.38%E2%80%AFAM.mov" type="video/quicktime">
+              사용 중인 브라우저가 비디오 태그를 지원하지 않습니다.
+            </video>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Multi-Image Lightbox Modal (Popup) -->
+      <div id="imageModal"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/85 backdrop-blur-md p-4 transition-all duration-300">
+        <div
+          class="bg-surface-container-lowest rounded-3xl max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl flex flex-col border border-white/20 relative animate-fade-in">
+
+          <!-- Modal Header with Tab Navigation -->
+          <div
+            class="px-6 py-4 bg-surface-container-low border-b border-outline-variant/30 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm">
+                <span class="material-symbols-outlined text-base">wallpaper</span>
+              </div>
+              <div>
+                <h3 id="modalTitle" class="font-bold text-sm text-on-surface">Console Screenshot Preview</h3>
+                <span id="modalDesc" class="text-[11px] text-on-surface-variant block">GCP & Gemini Enterprise
+                  Interactive Screen Walkthrough</span>
+              </div>
+            </div>
+
+            <!-- Image Selector Tabs -->
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button id="tabBtn0" onclick="openModalByIndex(0)"
+                class="px-3 py-1 rounded-full text-xs font-semibold bg-primary-container text-primary border border-primary/30 transition-all">
+                1. BQ Overview
+              </button>
+              <button id="tabBtn1" onclick="openModalByIndex(1)"
+                class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-primary transition-all">
+                2. BQ Edit
+              </button>
+              <button id="tabBtn2" onclick="openModalByIndex(2)"
+                class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-secondary transition-all">
+                3. GE Agent A2A
+              </button>
+              <button id="tabBtn3" onclick="openModalByIndex(3)"
+                class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-secondary transition-all">
+                4. GE Agent JSON
+              </button>
+
+              <button onclick="closeModal()"
+                class="w-8 h-8 rounded-full bg-surface-container hover:bg-error/20 hover:text-error text-on-surface flex items-center justify-center transition-colors ml-2">
+                <span class="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Modal Image Content Body with Navigation Controls -->
+          <div class="p-6 overflow-auto bg-slate-950 flex items-center justify-between min-h-[420px] relative">
+            <button onclick="navigateModal(-1)"
+              class="absolute left-4 z-10 w-10 h-10 rounded-full bg-black/60 hover:bg-primary text-white flex items-center justify-center backdrop-blur-sm transition-all shadow-md">
+              <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+
+            <div class="w-full flex justify-center">
+              <img id="modalImage" src="" alt="Console Screenshot"
+                class="max-w-full max-h-[70vh] object-contain rounded-xl shadow-2xl border border-white/10">
+            </div>
+
+            <button onclick="navigateModal(1)"
+              class="absolute right-4 z-10 w-10 h-10 rounded-full bg-black/60 hover:bg-primary text-white flex items-center justify-center backdrop-blur-sm transition-all shadow-md">
+              <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+
+          <!-- Modal Footer -->
+          <div
+            class="px-6 py-3 bg-surface-container-low border-t border-outline-variant/30 flex items-center justify-between text-xs text-on-surface-variant">
+            <span id="modalCounter" class="font-bold text-primary">Image 1 of 4</span>
+            <div class="flex items-center gap-4">
+              <span class="hidden sm:inline">키보드 화살표 (←/→) 로 이전/다음 화면 이동이 가능합니다.</span>
+              <button onclick="closeModal()"
+                class="bg-on-surface text-surface py-1.5 px-6 rounded-full font-bold hover:bg-primary transition-all">
+                닫기 (Close)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Pill (Fixed Bottom) -->
+      <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <div
+          class="bg-surface-container-lowest/80 backdrop-blur-2xl px-6 py-3 rounded-full shadow-2xl border border-white/60 flex items-center gap-6 text-xs">
+          <a class="font-label-technical text-primary font-bold hover:underline" href="#home">HOME</a>
+          <a class="font-label-technical text-on-surface-variant hover:text-primary transition-colors"
+            href="#description">DESCRIPTION</a>
+          <a class="font-label-technical text-on-surface-variant hover:text-primary transition-colors"
+            href="#technical-architecture">ARCHITECTURE</a>
+          <a class="font-label-technical text-on-surface-variant hover:text-primary transition-colors"
+            href="#workflow">WORKFLOW & SCREENSHOTS</a>
+          <a class="font-label-technical text-on-surface-variant hover:text-primary transition-colors"
+            href="#prompts">PROMPTS</a>
+          <a class="font-label-technical text-on-surface-variant hover:text-primary transition-colors"
+            href="#demo">DEMO</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-20 py-12 bg-surface-container-low border-t border-outline-variant/30">
+    <div
+      class="max-w-container-max mx-auto px-margin-desktop flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex flex-col gap-1">
+        <span class="font-headline-md text-lg font-bold text-on-surface">BigQuery Conversational Analytics Agent
+          Guide</span>
+        <span class="text-xs text-on-surface-variant">Gemini Enterprise App Integration Guide Document</span>
+      </div>
+      <div class="text-xs text-on-surface-variant">
+        © 2026 Google Cloud & Gemini Enterprise Agent Guide.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const imageList = [
+      {
+        src: "bigquery-agent-overview.png",
+        title: "[화면 1] BigQuery Data Agent 생성 및 개요 화면",
+        desc: "BigQuery Studio의 Agent Catalog 메뉴에서 데이터 에이전트를 새로 생성하고 지식 소스를 지정하는 화면입니다."
+      },
+      {
+        src: "bigquery-agent-edit.png",
+        title: "[화면 2] BigQuery Agent 지침, 검증된 쿼리 및 게시 설정",
+        desc: "에이전트의 System Instructions, Verified Queries 등록 및 Gemini Enterprise 방향으로 Publish/Share 하는 콘솔 화면입니다."
+      },
+      {
+        src: "ge-agent-a2a.png",
+        title: "[화면 3] Gemini Enterprise Admin Console - A2A 에이전트 연동 화면",
+        desc: "Gemini Enterprise 관리 콘솔에서 A2A(Agent-to-Agent) 에이전트를 승인하고 사용자 그룹에 프로비저닝하는 화면입니다."
+      },
+      {
+        src: "ge-agent-json.png",
+        title: "[화면 4] Gemini Enterprise 에이전트 JSON 스키마 명세",
+        desc: "BigQuery에서 게시한 데이터 에이전트의 OpenAPI 및 Agent JSON 스키마 명세 화면입니다."
+      }
+    ];
+
+    let currentImgIndex = 0;
+
+    function openModalByIndex(index) {
+      currentImgIndex = index;
+      const modal = document.getElementById('imageModal');
+      updateModalContent();
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function navigateModal(direction) {
+      currentImgIndex = (currentImgIndex + direction + imageList.length) % imageList.length;
+      updateModalContent();
+    }
+
+    function updateModalContent() {
+      const item = imageList[currentImgIndex];
+      document.getElementById('modalImage').src = item.src;
+      document.getElementById('modalTitle').innerText = item.title;
+      document.getElementById('modalDesc').innerText = item.desc;
+      document.getElementById('modalCounter').innerText = `Image ${currentImgIndex + 1} of ${imageList.length}`;
+
+      // Update tab active states
+      for (let i = 0; i < imageList.length; i++) {
+        const btn = document.getElementById(`tabBtn${i}`);
+        if (btn) {
+          if (i === currentImgIndex) {
+            btn.className = "px-3 py-1 rounded-full text-xs font-semibold bg-primary text-on-primary shadow-xs transition-all";
+          } else {
+            btn.className = "px-3 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-primary transition-all";
+          }
+        }
+      }
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close on backdrop click
+    document.getElementById('imageModal').addEventListener('click', function (e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Keyboard controls (Esc to close, Left/Right arrows to navigate)
+    document.addEventListener('keydown', function (e) {
+      const modal = document.getElementById('imageModal');
+      if (modal.classList.contains('hidden')) return;
+
+      if (e.key === 'Escape') {
+        closeModal();
+      } else if (e.key === 'ArrowRight') {
+        navigateModal(1);
+      } else if (e.key === 'ArrowLeft') {
+        navigateModal(-1);
+      }
+    });
+  </script>
+
+</body>
+
+</html>

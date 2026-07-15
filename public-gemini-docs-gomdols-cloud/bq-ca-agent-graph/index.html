@@ -1,0 +1,466 @@
+<!DOCTYPE html><html lang="ko" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BigQuery Conversational Analytics Agent</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'google-blue': '#1a73e8',
+            'google-purple': '#8e24aa',
+            'bg-gray-light': '#f8f9fa',
+          },
+          fontFamily: {
+            sans: ['"Noto Sans KR"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
+<style data-purpose="custom-layout">
+    body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; color: #3c4043; }
+    .card-shadow { box-shadow: 0 1px 3px 0 rgba(60,64,67,0.302), 0 4px 8px 3px rgba(60,64,67,0.149); }
+    .step-number { border: 4px solid #1a73e8; }
+  </style>
+</head>
+<body class="antialiased">
+<!-- BEGIN: HeroSection -->
+<header class="pt-16 pb-24 px-6 md:px-12 lg:px-24 bg-white">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
+<div class="md:w-3/5">
+<div class="flex items-center space-x-2 mb-4">
+<span class="text-blue-600 bg-blue-50 px-3 py-1 rounded-full text-xs font-semibold">✨ Gemini Enterprise App Integration</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">BigQuery Knowledge graph</h1>
+<h2 class="text-3xl md:text-4xl font-bold text-indigo-700 mb-6 leading-tight">Conversational Analytics Agent</h2>
+<p class="text-lg text-gray-600 mb-10 leading-relaxed">
+          복잡한 SQL 및 그래프 쿼리(GQL) 구문을 알 필요 없이,<br>
+          자연어 대화를 통해 BigQuery Knowledge Graph 데이터를 조회하고 분석할 수 있는 에이전트를, Gemini Enterprise App과 연동해 보세요!
+        </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-google-blue text-white px-6 py-3 rounded-lg font-medium shadow-md hover:bg-blue-700 transition flex items-center">
+<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+            연동 가이드 &amp; 4단계 콘솔 화면 보기
+          </button>
+<button class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition flex items-center">
+<svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            프롬프트 샘플
+          </button>
+</div>
+</div>
+<div class="md:w-1/3 mt-12 md:mt-0 space-y-4">
+<!-- Feature Cards -->
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4">
+<div class="p-2 bg-blue-50 rounded-lg text-blue-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path></svg></div>
+<div>
+<h4 class="font-bold text-sm">NL-to-SQL</h4>
+<p class="text-xs text-gray-500">자연어 질의를 고성능 SQL로 자동 변환하여 데이터 엔지니어 대기 시간 Zero화</p>
+</div>
+</div>
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4">
+<div class="p-2 bg-blue-50 rounded-lg text-blue-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg></div>
+<div>
+<h4 class="font-bold text-sm">GCP IAM &amp; 보안 승계</h4>
+<p class="text-xs text-gray-500">OAuth 커넥터 기반으로 사용자 본인의 IAM 권한을 전달하여 엄격한 보안 유지</p>
+</div>
+</div>
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4">
+<div class="p-2 bg-purple-50 rounded-lg text-purple-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" fill-rule="evenodd"></path></svg></div>
+<div>
+<h4 class="font-bold text-sm">Knowledge Catalog Grounding</h4>
+<p class="text-xs text-gray-500">전사 표준 메타데이터 및 Verified Queries 기반으로 정확성 있는 SQL 실행</p>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: HeroSection -->
+<!-- BEGIN: DescriptionPillars -->
+<section class="py-20 px-6 md:px-12 lg:px-24 bg-white border-t border-gray-100">
+<div class="max-w-7xl mx-auto">
+<div class="mb-12">
+<span class="text-google-blue font-bold text-xs uppercase tracking-widest">Agent Overview</span>
+<h3 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Description &amp; Key Pillars</h3>
+<p class="text-gray-600 max-w-3xl">
+          Gemini Enterprise에 연동된 <b>BigQuery Conversational Agent</b>는 사용자가 자연어로 질문하면 즉각적으로&nbsp;</p><div class="">SQL 및 GQL를 실행하고 대규모 데이터셋을 분석합니다.</div><p class=""></p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Pillar Card 1 -->
+<div class="bg-gray-50 p-8 rounded-3xl border border-gray-100">
+<div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="text-xl font-bold mb-4">데이터 탐색 및 분석</h4>
+<p class="text-gray-600 text-sm leading-relaxed">수일 이상 소요되던 데이터 분석 및 리포트 작성 대기 시간을 수초~수분 단위로 단축하여 의사결정 속도를 끌어올립니다.</p>
+</div>
+<!-- Pillar Card 2 -->
+<div class="bg-gray-50 p-8 rounded-3xl border border-gray-100">
+<div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center text-teal-600 mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="text-xl font-bold mb-4">제조 및 공급망 분석</h4>
+<p class="text-gray-600 text-sm leading-relaxed">지식 그래프를 활용해 사일로화된 데이터를 유기적으로 연결합니다.&nbsp;고객 - 제품 - 부품 - 원자재로 이어지는 복잡한 공급망 네트워크와 BOM의 관계를 분석하고, 잠재적 리스크나 공급 병목 현상등을 선제적으로 파악 할 수 있도록 지원합니다.</p><div class=""><br></div>
+</div>
+<!-- Pillar Card 3 -->
+<div class="bg-gray-50 p-8 rounded-3xl border border-gray-100">
+<div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="text-xl font-bold mb-4">인사이트 시각화</h4>
+<p class="text-gray-600 text-sm leading-relaxed">복잡한 데이터를 요약해 비즈니스 인사이트를 도출합니다. Glossary 기능을 연계하여 도메인 고유 전문 용어를 정확하게 반영한 분석결과를 제공합니다.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: DescriptionPillars -->
+<!-- BEGIN: TechnicalArchitecture -->
+<section class="py-20 px-6 md:px-12 lg:px-24 bg-gray-50">
+<div class="max-w-7xl mx-auto text-center">
+<span class="text-google-blue font-bold text-xs uppercase tracking-widest">System Architecture</span>
+<h3 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Technical Architecture</h3>
+<p class="text-gray-500 mb-12">Gemini Enterprise App(GE App)의 대화형 인터페이스와 BigQuery Studio의 데이터 에이전트 엔진이 A2A(Agent-to-Agent) 및 OAuth IAM 체계로 밀접하게 결합된 아키텍처입니다.</p>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-white p-6 rounded-xl border border-gray-200 text-left">
+<div class="flex items-center space-x-2 text-blue-600 mb-4">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-sm">1. GE App UI</span>
+</div>
+<ul class="text-xs text-gray-500 space-y-2 list-disc pl-4">
+<li class="">비즈니스 사용자 대화 인터페이스</li>
+<li class="">OAuth Token 및 사용자 Identity 보유</li>
+<li class="">대화형 에이전트 호스팅 인터페이스</li>
+</ul>
+</div>
+<div class="bg-white p-6 rounded-xl border border-gray-200 text-left">
+<div class="flex items-center space-x-2 text-teal-600 mb-4">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-sm">2. GE App &amp; A2A</span>
+</div>
+<ul class="text-xs text-gray-500 space-y-2 list-disc pl-4">
+<li class="">A2A (Agent-to-Agent) 프로토콜 프록시 체이닝</li>
+<li class="">Admin 승인 및 사용자 그룹별 권한 제어</li>
+<li class="">안전한 Context &amp; Query 전달</li>
+</ul>
+</div>
+<div class="bg-white p-6 rounded-xl border border-gray-200 text-left">
+<div class="flex items-center space-x-2 text-purple-600 mb-4">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-sm">3. BQ CA Engine</span>
+</div>
+<ul class="text-xs text-gray-500 space-y-2 list-disc pl-4">
+<li class="">NL-to-SQL 변환 엔진</li>
+<li class="">System Instructions &amp; Verified Queries</li>
+<li class="">Knowledge Catalog 용어 기반 Grounding</li>
+</ul>
+</div>
+<div class="bg-white p-6 rounded-xl border border-gray-200 text-left">
+<div class="flex items-center space-x-2 text-gray-800 mb-4">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-sm">4. BigQuery &amp; Audit</span>
+</div>
+<ul class="text-xs text-gray-500 space-y-2 list-disc pl-4">
+<li class="">BigQuery 테이블, 뷰 실행</li>
+<li class="">사용자 IAM 권한 검증</li>
+<li class="">BigQuery Audit Log (Job History) 추적</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- END: TechnicalArchitecture -->
+<!-- BEGIN: StepByStepGuide -->
+<section class="py-20 px-6 md:px-12 lg:px-24 bg-white">
+<div class="max-w-7xl mx-auto">
+<span class="text-google-blue font-bold text-xs uppercase tracking-widest">Step-by-Step Guide &amp; Screen Screenshots</span>
+<h3 class="text-3xl font-bold text-gray-900 mt-2 mb-12">Gemini Enterprise App 연동 및 사용 프로세스 (전체 4단계 화면 가이드)</h3>
+<div class="space-y-12">
+<!-- Step 1 -->
+<div class="border border-gray-200 rounded-3xl p-8 bg-white shadow-sm">
+<div class="flex items-start space-x-6">
+<div class="bg-google-blue text-white w-12 h-12 flex items-center justify-center rounded-xl font-bold text-xl shrink-0">1</div>
+<div class="flex-1">
+<span class="text-xs font-bold text-blue-600 mb-1 block">데이터 엔지니어 / 분석가 영역</span>
+<h4 class="text-xl font-bold mb-6">1단계: BigQuery Studio에서 대화형 에이전트 생성 및 지식 소스 설정</h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+<div class="bg-blue-50 p-4 rounded-xl">
+<div class="flex items-center space-x-2 mb-2">
+<svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-sm">에이전트 생성 및 지식 소스 지정</span>
+<!-- <img src="./image/bq-kg-agent.png" alt="bigquery_knowledge_graph_query"> -->
+</div>
+<p class="text-xs text-gray-600">BigQuery Studio 'Agent Catalog' 메뉴에서 대화형 에이전트를 생성하고, 분석 대상이 될 Knowledge graph를 지식 소스로 지정합니다.</p>
+</div>
+<div class="bg-blue-50 p-4 rounded-xl">
+<div class="flex items-center space-x-2 mb-2">
+<svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-sm">프롬프트 고도화 (Instructions &amp; Verified Queries)</span>
+<!-- <img src="./image/bq-kg-verified-query.png" alt="bigquery_knowledge_graph_query"> -->
+</div>
+<p class="text-xs text-gray-600">System Instructions(시스템 지침)을 등록하고 자주 사용하는 쿼리를 Verified Queries로 설정하여 답변 정확도를 극대화합니다.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-gray-100 rounded-lg p-4 flex items-center justify-between border border-gray-200"><div class="w-full h-full overflow-hidden rounded-lg"><img src="bq-kg-agent.png" alt="BigQuery Agent Overview 콘솔" class="w-full h-auto object-contain"></div></div>
+<div class="bg-gray-100 rounded-lg p-4 flex items-center justify-between border border-gray-200"><div class="w-full h-full overflow-hidden rounded-lg"><img src="bq-kg-verified-query.png" alt="BigQuery Agent 지침/검증쿼리 편집" class="w-full h-auto object-contain"></div></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="border border-gray-200 rounded-3xl p-8 bg-white shadow-sm">
+<div class="flex items-start space-x-6">
+<div class="bg-green-500 text-white w-12 h-12 flex items-center justify-center rounded-xl font-bold text-xl shrink-0">2</div>
+<div class="flex-1">
+<span class="text-xs font-bold text-green-600 mb-1 block">운영자 &amp; 관리자 영역</span>
+<h4 class="text-xl font-bold mb-6">2단계: Gemini Enterprise A2A 에이전트 연동 및 JSON 스키마 명세</h4>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+<div class="bg-green-50 p-4 rounded-xl">
+<div class="flex items-center space-x-2 mb-2">
+<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-xs">A2A 연동 및 승인</span>
+</div>
+<p class="text-[10px] text-gray-600">Gemini Enterprise 관리 콘솔에서 A2A (Agent-to-Agent) 에이전트를 등록 및 관리 권한을 프로비저닝합니다.</p>
+</div>
+<div class="bg-green-50 p-4 rounded-xl">
+<div class="flex items-center space-x-2 mb-2">
+<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-xs">Agent JSON Spec 검증</span>
+</div>
+<p class="text-[10px] text-gray-600">BigQuery에서 정의한 에이전트의 OpenAPI 및 Agent JSON 스키마 명세를 검증하고 설정을 완료합니다.</p>
+</div>
+<div class="bg-green-50 p-4 rounded-xl">
+<div class="flex items-center space-x-2 mb-2">
+<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-xs">사용자 그룹 공유</span>
+</div>
+<p class="text-[10px] text-gray-600">에이전트를 활용할 특정 비즈니스 사용자 그룹 혹은 개별 사용자에 접근 권한 공유.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
+</div>
+</div>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="border border-gray-200 rounded-3xl p-8 bg-white shadow-sm">
+<div class="flex items-start space-x-6">
+<div class="bg-purple-600 text-white w-12 h-12 flex items-center justify-center rounded-xl font-bold text-xl shrink-0">3</div>
+<div class="flex-1">
+<span class="text-xs font-bold text-purple-600 mb-1 block">비즈니스 사용자 영역</span>
+<h4 class="text-xl font-bold mb-6">3단계: Gemini Enterprise 대화창에서 자연어로 데이터 활용</h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-purple-50 p-4 rounded-xl">
+<div class="flex items-center space-x-2 mb-2">
+<svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-sm">자연어 대화 및 쿼리</span>
+</div>
+<p class="text-xs text-gray-600">Gemini Enterprise 대화창에서 업무 중 궁금한 점을 자연어로 질의합니다.<br>예시: "지난달 품목별 평균 판매 가격이 가장 높았던 정보는 무엇인가요?"</p>
+</div>
+<div class="bg-purple-50 p-4 rounded-xl">
+<div class="flex items-center space-x-2 mb-2">
+<svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-sm">실시간 SQL 생성 및 시각적 리포팅</span>
+</div>
+<p class="text-xs text-gray-600">에이전트가 변환한 최적의 BigQuery SQL이 실행되어 시각적 데이터 테이블과 핵심 인사이트 요약 결과가 대화창에 즉시 제공됩니다.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: StepByStepGuide -->
+<!-- BEGIN: SecurityBanner -->
+<section class="mx-6 md:mx-12 lg:mx-24 mb-20">
+<div class="max-w-7xl mx-auto bg-gradient-to-r from-blue-700 to-purple-800 rounded-3xl p-10 text-white flex flex-col md:flex-row justify-between items-center">
+<div class="md:w-3/4 mb-6 md:mb-0">
+<div class="flex items-center space-x-2 mb-2">
+<svg class="w-5 h-5 text-blue-300" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+<span class="text-xs font-bold uppercase tracking-wider">Enterprise Security &amp; Governance</span>
+</div>
+<h3 class="text-2xl font-bold mb-4">강력한 엔터프라이즈 기능 및 보안 장점</h3>
+<p class="text-blue-100 text-sm leading-relaxed">
+          OAuth IAM 전달로 민감 데이터 노출 위험 제로, Knowledge Catalog 접지로 환각 최소화, BigQuery Audit Logs (Job History) 기반 쿼리 수행 이력 및 비용 모니터링 완벽 지원.
+        </p>
+</div>
+<div>
+<button class="bg-white text-indigo-800 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-gray-100 transition">프롬프트 실행해보기</button>
+</div>
+</div>
+</section>
+<!-- END: SecurityBanner -->
+<!-- BEGIN: BusinessImpact -->
+<section class="py-20 px-6 md:px-12 lg:px-24 bg-gray-50 border-t border-gray-100">
+<div class="max-w-7xl mx-auto">
+<span class="text-google-blue font-bold text-xs uppercase tracking-widest">Business Impact</span>
+<h3 class="text-3xl font-bold text-gray-900 mt-2 mb-12">주요 활용 유스케이스 (Use Cases)</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Use Case Card 1 -->
+<div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+<div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="text-lg font-bold mb-4">부품 및 원자재 분석</h4>
+<p class="text-sm text-gray-500 mb-8 leading-relaxed">현장 관리자 및 생산 기술 담당자가 개발자 도움 없이도 설비별 가동률, 주요 부품 교체 주기, 예방 보전 트렌드를 자연어로 실시간 조회합니다.</p>
+<div class="border-t border-gray-100 pt-6">
+<p class="text-[10px] font-bold text-blue-600 mb-1">비즈니스 효과:</p>
+<p class="text-[10px] text-gray-500">리포트 요청부터 수령까지 수일 소요되던 프로세스를 30초 대화로 단축.</p>
+</div>
+</div>
+<!-- Use Case Card 2 -->
+<div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+<div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="text-lg font-bold mb-4">Verified Queries 기반 정밀 분석</h4>
+<p class="text-sm text-gray-500 mb-8 leading-relaxed">데이터 팀이 미리 검증한 Verified Query 및 전사 용어집(Glossary)을 기반으로 정확도가 보장된 핵심 경영 지표 및 수치를 산출합니다.</p>
+<div class="border-t border-gray-100 pt-6">
+<p class="text-[10px] font-bold text-purple-600 mb-1">비즈니스 효과:</p>
+<p class="text-[10px] text-gray-500">SQL 오류 및 환각 현상 없이 검증된 전사 표준 KPI 보고서 자동화.</p>
+</div>
+</div>
+<!-- Use Case Card 3 -->
+<div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+<div class="w-12 h-12 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-4.514A9.01 9.01 0 0012 15c1.281 0 2.447.268 3.497.751m4.574-9.424a9.042 9.042 0 01-1.565 1.483m-3.125-3.124a9.042 9.042 0 01-1.483 1.565m-2.102-2.102a5.002 5.002 0 011.002 4.282m4.424 4.424A5.002 5.002 0 019.288 15M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="text-lg font-bold mb-4">안전한 데이터 거버넌스 준수</h4>
+<p class="text-sm text-gray-500 mb-8 leading-relaxed">보안 담당자와 경영진은 사용자 IAM 권한을 완벽 승계받은 에이전트를 통해 접근 제어를 유지하면서 전사 데이터 활용도를 높이고 Audit Log를 모니터링합니다.</p>
+<div class="border-t border-gray-100 pt-6">
+<p class="text-[10px] font-bold text-teal-600 mb-1">비즈니스 효과:</p>
+<p class="text-[10px] text-gray-500">민감 정보 유출 방지 및 BigQuery 쿼리 실행 비용의 명확한 투명성 확보.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: BusinessImpact -->
+<!-- BEGIN: PromptLibrary -->
+<section class="py-24 px-6 md:px-12 lg:px-24 bg-white">
+<div class="max-w-7xl mx-auto text-center">
+<span class="text-google-blue font-bold text-xs uppercase tracking-widest">Prompt Library</span>
+<h3 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Prompt Samples &amp; Examples</h3>
+<p class="text-gray-500 mb-16">Gemini Enterprise 대화창에 직접 입력하여 사용할 수 있는 추천 프롬프트 예시입니다.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+<!-- Prompt Card 1 -->
+<div class="border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+<div class="bg-gray-50 p-4 border-b border-gray-200 flex justify-between items-center">
+<div class="flex items-center space-x-2">
+<div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-[10px]">BQ</div>
+<span class="text-xs font-bold">BigQuery CA Agent</span>
+</div>
+<span class="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">ENTERPRISE READY</span>
+</div>
+<div class="p-6">
+<h5 class="font-bold text-sm mb-4">품목별 평균 판매 가격 분석</h5>
+<div class="bg-gray-50 p-4 rounded-lg mb-4 italic text-sm text-gray-600 border-l-4 border-blue-500">
+              "부품 타입(type)별로 등록된 부품이 각각 몇 개씩 있는지 알려줘"</div>
+<div class="flex justify-between items-center pt-4 border-t border-gray-100">
+
+<span class="text-[10px] font-bold text-blue-500">NL-to-SQL</span>
+</div>
+</div>
+</div>
+<!-- Prompt Card 2 -->
+<div class="border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+<div class="bg-gray-50 p-4 border-b border-gray-200 flex justify-between items-center">
+<div class="flex items-center space-x-2">
+<div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-[10px]">BQ</div>
+<span class="text-xs font-bold">BigQuery CA Agent</span>
+</div>
+<span class="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">ENTERPRISE READY</span>
+</div>
+<div class="p-6">
+<h5 class="font-bold text-sm mb-4">자재 결함 및 품질 현황</h5>
+<div class="bg-gray-50 p-4 rounded-lg mb-4 italic text-sm text-gray-600 border-l-4 border-blue-500">"최근 특정 자재(예: 'Viton')의 품질 이슈가 의심될 때, 그 자재로 만든 부품들이 어떤 결함(Fault)들을 발생시켰는지 역추적해줘"</div>
+<div class="flex justify-between items-center pt-4 border-t border-gray-100">
+
+<span class="text-[10px] font-bold text-blue-500"><br></span>
+</div>
+</div>
+</div>
+<!-- Prompt Card 3 -->
+<div class="border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+<div class="p-6 bg-white">
+<div class="flex items-center space-x-2 mb-4">
+<span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">트렌드 &amp; 시각화</span>
+<svg class="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path></svg>
+</div>
+<h5 class="font-bold text-sm mb-4">정비 효율성</h5>
+<div class="bg-blue-50/30 p-4 rounded-lg mb-4 italic text-xs text-gray-600">"현장에서 가장 자주 발생하는 결함 종류별로, 실제 어떤 정비 작업(Maintenance)들이 매핑되어 해결됬는지 알려줘"</div>
+<div class="flex justify-between items-center pt-4 border-t border-gray-100">
+
+<span class="text-[10px] font-bold text-teal-600">Aggregate SQL</span>
+</div>
+</div>
+</div>
+<!-- Prompt Card 4 -->
+<div class="border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+<div class="p-6 bg-white">
+<div class="flex items-center space-x-2 mb-4">
+<span class="text-[9px] font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Verified Queries 기반</span>
+<svg class="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+</div>
+<h5 class="font-bold text-sm mb-4">앤드투앤드 장애 진단</h5>
+<div class="bg-purple-50/30 p-4 rounded-lg mb-4 italic text-xs text-gray-600">"특정 제품(<code data-path-to-node="11,0" data-index-in-node="7">DISP-VALVE-PRO</code>)에서 발생할 수 있는 결함 시나리오를 자재 성분부터 정비 액션까지 한 라인으로 쭉 펼쳐서 확인해줘"</div>
+<div class="flex justify-between items-center pt-4 border-t border-gray-100">
+
+<span class="text-[10px] font-bold text-purple-600">High Precision</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: PromptLibrary -->
+<!-- BEGIN: Footer -->
+<footer class="bg-white border-t border-gray-100 py-12 px-6 md:px-12 lg:px-24">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<div class="mb-6 md:mb-0">
+<h6 class="font-bold text-gray-900 text-sm">BigQuery Knowledge Graph CA Agent Guide</h6>
+<p class="text-[10px] text-gray-400 mt-1">Gemini Enterprise App Integration Guide Document</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-6 text-[10px] font-bold text-gray-500 uppercase tracking-tighter">
+<a class="text-google-blue" href="#">Home</a>
+<a class="hover:text-google-blue" href="#">Description</a>
+<a class="hover:text-google-blue" href="#">Architecture</a>
+<a class="hover:text-google-blue text-center" href="#">Workflow &amp;<br>Screenshots</a>
+<a class="hover:text-google-blue" href="#">Usecases</a>
+<a class="hover:text-google-blue" href="#">Prompts</a>
+</nav>
+</div>
+<div class="border-t border-gray-100 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+<p class="text-[9px] text-gray-400">© 2024 Google Cloud &amp; Gemini Enterprise Agent Guide.</p>
+<div class="flex space-x-4 mt-4 md:mt-0">
+<div class="w-20 h-4 bg-gray-100 rounded"></div>
+<div class="w-16 h-4 bg-gray-100 rounded"></div>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: Footer -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>
