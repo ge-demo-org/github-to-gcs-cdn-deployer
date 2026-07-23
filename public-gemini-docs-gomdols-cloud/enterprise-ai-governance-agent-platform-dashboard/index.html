@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise AI Governance & Agent Platform Dashboard</title>
+
+  <!-- Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Hanken+Grotesk:wght@500;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet">
+
+  <style>
+    @layer base {
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        overscroll-behavior: none;
+        background: radial-gradient(circle at 50% -20%, #e6f4ea 0%, #f8fbf9 45%);
+        min-height: 100vh;
+        font-family: 'Noto Sans KR', 'Plus Jakarta Sans', sans-serif;
+      }
+
+      main> :first-child {
+        margin-top: 0 !important;
+      }
+
+      main> :last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f2;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #b7c7bc;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8fa395;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #0f9d58 0%, #137333 50%, #00796b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0f9d58",
+            "primary-dark": "#0b8043",
+            "primary-container": "#e6f4ea",
+            "on-primary": "#ffffff",
+            "secondary": "#00796b",
+            "secondary-container": "#e0f2f1",
+            "tertiary": "#2e7d32",
+            "tertiary-container": "#edf7ed",
+            "surface": "#f8fbf9",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f1f8f3",
+            "surface-container": "#e8f0eb",
+            "surface-container-high": "#dbe6df",
+            "on-surface": "#1e2922",
+            "on-surface-variant": "#495d52",
+            "outline": "#738b7e",
+            "outline-variant": "#d2ded7"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            full: "9999px"
+          },
+          spacing: {
+            "stack-lg": "32px",
+            "margin-desktop": "40px",
+            "margin-mobile": "16px",
+            "stack-md": "16px",
+            "container-max": "1280px",
+            "gutter": "24px",
+            "stack-sm": "8px"
+          },
+          fontFamily: {
+            "headline-lg": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+            "body-md": ["Noto Sans KR", "Plus Jakarta Sans", "sans-serif"],
+            "body-lg": ["Noto Sans KR", "Plus Jakarta Sans", "sans-serif"],
+            "headline-md": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+            "display-lg": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+            "label-technical": ["Hanken Grotesk", "sans-serif"]
+          },
+          fontSize: {
+            "headline-lg": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
+            "body-md": ["14px", { lineHeight: "1.6", fontWeight: "400" }],
+            "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+            "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "500" }],
+            "display-lg": ["44px", { lineHeight: "1.25", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "label-technical": ["12px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="font-body-md text-on-surface antialiased">
+
+  <!-- Header Navigation -->
+  <header class="fixed top-0 left-0 right-0 z-50 pt-4 px-margin-desktop">
+    <div
+      class="max-w-container-max mx-auto flex items-center justify-between h-16 bg-surface-container-lowest/80 backdrop-blur-xl border border-white/80 rounded-full px-8 shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-md">
+          <span class="material-symbols-outlined text-on-primary text-[22px]">shield</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-headline-md text-base font-bold text-on-surface leading-tight">AI Governance Dashboard</span>
+          <span class="text-[11px] text-primary font-semibold tracking-wide">Google Cloud & Gemini 3.5 Flash</span>
+        </div>
+      </div>
+      <nav class="hidden md:flex items-center gap-7 font-medium">
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-semibold"
+          href="#home">Home</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm"
+          href="#description">Overview</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm"
+          href="#features">Features</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm"
+          href="#tech-stack">Tech Stack</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="https://ge-for-sales-dashboard-1098336234556.us-central1.run.app/" target="_blank" rel="noopener noreferrer"
+          class="bg-primary hover:bg-primary-dark text-on-primary px-4 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all shadow-sm flex items-center gap-1.5">
+          <span>Live Demo</span>
+          <span class="material-symbols-outlined text-sm">open_in_new</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-20">
+    <div class="flex flex-col w-full relative">
+
+      <!-- Hero Section (#home) -->
+      <section class="px-margin-desktop py-20 relative overflow-hidden" id="home">
+        <div class="max-w-container-max mx-auto relative z-10">
+          <div class="flex flex-col lg:flex-row items-center gap-12">
+            <div class="flex-1 flex flex-col gap-5">
+              <div
+                class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-container text-primary text-xs font-bold tracking-wide w-fit">
+                <span class="material-symbols-outlined text-sm">verified_user</span>
+                <span>Enterprise AI Governance Platform</span>
+              </div>
+              <h1 class="font-display-lg text-display-lg text-on-surface max-w-3xl">
+                Enterprise AI Governance & <br>
+                <span class="gradient-text">Agent Platform Dashboard</span>
+              </h1>
+              <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                Google Cloud BigQuery 및 Gemini 3.5 Flash 엔진 기반으로 AI 과금, 보안 감사 로그 및 FinOps 스파이크를 실시간 관제합니다.
+              </p>
+              <div class="flex flex-wrap items-center gap-4 pt-2">
+                <!-- Live Demo Button -->
+                <a href="https://ge-for-sales-dashboard-1098336234556.us-central1.run.app/" target="_blank" rel="noopener noreferrer"
+                  class="bg-primary text-on-primary font-bold py-3.5 px-8 rounded-full text-sm shadow-md hover:bg-primary-dark transition-all flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">rocket_launch</span>
+                  <span>실제 예시 대시보드 바로가기</span>
+                  <span class="material-symbols-outlined text-sm">open_in_new</span>
+                </a>
+                <a href="#features"
+                  class="bg-surface-container-lowest text-on-surface border border-outline-variant font-semibold py-3.5 px-8 rounded-full text-sm hover:bg-surface-container-low transition-all flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">auto_awesome</span>
+                  <span>핵심 기능 보기</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Hero Feature Cards -->
+            <div class="w-full lg:w-[420px] grid grid-cols-1 gap-4">
+              <div class="glass-card p-5 rounded-2xl shadow-sm border border-white/80 flex items-start gap-4">
+                <div
+                  class="w-11 h-11 rounded-xl bg-primary-container text-primary flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-xl">payments</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-on-surface text-sm mb-0.5">Detailed Billing</h4>
+                  <p class="text-xs text-on-surface-variant">LLM 모델별 토큰 사용량 & 실시간 과금 추적</p>
+                </div>
+              </div>
+
+              <div class="glass-card p-5 rounded-2xl shadow-sm border border-white/80 flex items-start gap-4">
+                <div
+                  class="w-11 h-11 rounded-xl bg-secondary-container text-secondary flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-xl">security</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-on-surface text-sm mb-0.5">Model Armor 보안 관제</h4>
+                  <p class="text-xs text-on-surface-variant">프롬프트 인젝션 및 보안 차단 시도 투명 감사</p>
+                </div>
+              </div>
+
+              <div class="glass-card p-5 rounded-2xl shadow-sm border border-white/80 flex items-start gap-4">
+                <div
+                  class="w-11 h-11 rounded-xl bg-tertiary-container text-tertiary flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-xl">calendar_month</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-on-surface text-sm mb-0.5">기간별 동적 관제</h4>
+                  <p class="text-xs text-on-surface-variant">최근 7일 / 14일 / 30일 맞춤형 데이터 필터</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Description Section (#description) -->
+      <section class="px-margin-desktop py-14" id="description">
+        <div class="max-w-container-max mx-auto">
+          <div
+            class="bg-surface-container-lowest rounded-[32px] p-8 shadow-sm border border-outline-variant/40">
+            <div class="flex flex-col gap-5">
+              <div>
+                <span class="font-label-technical text-label-technical text-primary uppercase tracking-[0.2em]">Governance Overview</span>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mt-1">Platform Overview & Pillars</h2>
+              </div>
+              <p class="font-body-md text-on-surface-variant leading-relaxed max-w-4xl">
+                Google Cloud BigQuery와 Gemini 3.5 Flash를 결합하여 전사 생성형 AI의 과금, 보안, 활동 데이터를 통합 관제합니다.
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-2">
+                <div
+                  class="p-5 rounded-2xl bg-surface-container-low flex flex-col gap-2 border border-outline-variant/30 hover:border-primary/50 transition-all">
+                  <div class="w-9 h-9 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-lg">payments</span>
+                  </div>
+                  <h3 class="font-bold text-base text-on-surface">LLM 과금 & SKU 드릴다운</h3>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    카드 클릭 시 세부 원본 SKU 코드 및 토큰/비용 실시간 표출
+                  </p>
+                </div>
+                <div
+                  class="p-5 rounded-2xl bg-surface-container-low flex flex-col gap-2 border border-outline-variant/30 hover:border-primary/50 transition-all">
+                  <div class="w-9 h-9 rounded-lg bg-secondary text-on-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-lg">gavel</span>
+                  </div>
+                  <h3 class="font-bold text-base text-on-surface">Model Armor 보안 관제</h3>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    차단된 원본 프롬프트 및 차단 사유 100% 투명 감사 추적
+                  </p>
+                </div>
+                <div
+                  class="p-5 rounded-2xl bg-surface-container-low flex flex-col gap-2 border border-outline-variant/30 hover:border-primary/50 transition-all">
+                  <div class="w-9 h-9 rounded-lg bg-tertiary text-on-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-lg">smart_toy</span>
+                  </div>
+                  <h3 class="font-bold text-base text-on-surface">2단계 AI 챗봇 & FinOps</h3>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    실측 팩트 기반 대화형 분석 & 비용 급증 원인 자동 진단
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1. Key Features Section (#features) -->
+      <section class="px-margin-desktop py-14" id="features">
+        <div class="max-w-container-max mx-auto">
+          <div class="flex flex-col items-center text-center mb-10">
+            <span class="font-label-technical text-label-technical text-primary uppercase tracking-[0.2em]">Key Features</span>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mt-1">핵심 기능 (Key Features)</h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            <!-- Feature 1 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col gap-3 hover:border-primary/50 transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary-container text-primary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">analytics</span>
+                </div>
+                <div>
+                  <span class="text-[11px] font-bold text-primary uppercase">Feature 1</span>
+                  <h3 class="font-bold text-base text-on-surface">LLM 과금 & SKU 드릴다운</h3>
+                </div>
+              </div>
+              <ul class="text-xs text-on-surface-variant space-y-1.5 leading-relaxed">
+                <li class="flex items-center gap-1.5"><span class="text-primary font-bold">•</span> GCP Detailed Billing 실시간 연동</li>
+                <li class="flex items-center gap-1.5"><span class="text-primary font-bold">•</span> 모델 카드 클릭 시 세부 원본 SKU 명세 표출</li>
+                <li class="flex items-center gap-1.5"><span class="text-primary font-bold">•</span> 모델별 토큰 사용량 및 실시간 비용 추적</li>
+              </ul>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col gap-3 hover:border-secondary/50 transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-secondary-container text-secondary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">security</span>
+                </div>
+                <div>
+                  <span class="text-[11px] font-bold text-secondary uppercase">Feature 2</span>
+                  <h3 class="font-bold text-base text-on-surface">Model Armor 보안 관제</h3>
+                </div>
+              </div>
+              <ul class="text-xs text-on-surface-variant space-y-1.5 leading-relaxed">
+                <li class="flex items-center gap-1.5"><span class="text-secondary font-bold">•</span> BigQuery 보안 차단 감사 로그 직쿼리</li>
+                <li class="flex items-center gap-1.5"><span class="text-secondary font-bold">•</span> 차단 원문 문구 및 사유 실시간 관제</li>
+                <li class="flex items-center gap-1.5"><span class="text-secondary font-bold">•</span> 프롬프트 인젝션 및 보안 위협 모니터링</li>
+              </ul>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col gap-3 hover:border-tertiary/50 transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-tertiary-container text-tertiary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">calendar_month</span>
+                </div>
+                <div>
+                  <span class="text-[11px] font-bold text-tertiary uppercase">Feature 3</span>
+                  <h3 class="font-bold text-base text-on-surface">동적 기간별 데이터 필터</h3>
+                </div>
+              </div>
+              <ul class="text-xs text-on-surface-variant space-y-1.5 leading-relaxed">
+                <li class="flex items-center gap-1.5"><span class="text-tertiary font-bold">•</span> <strong>최근 7일 / 14일 / 30일</strong> 원클릭 조회</li>
+                <li class="flex items-center gap-1.5"><span class="text-tertiary font-bold">•</span> 사용자 지정 기간별 AI 사용량 및 과금 추이</li>
+                <li class="flex items-center gap-1.5"><span class="text-tertiary font-bold">•</span> 접속일 기준 자동 일자 앵커링</li>
+              </ul>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col gap-3 hover:border-primary/50 transition-all lg:col-span-2">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary-container text-primary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">smart_toy</span>
+                </div>
+                <div>
+                  <span class="text-[11px] font-bold text-primary uppercase">Feature 4</span>
+                  <h3 class="font-bold text-base text-on-surface">Gemini 3.5 Flash 2단계 AI 챗봇</h3>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
+                  <span class="font-bold text-xs text-on-surface block mb-0.5">전사 BigQuery 인지</span>
+                  <p class="text-[11px] text-on-surface-variant">Billing, Audit 등 데이터셋 통합 연동</p>
+                </div>
+                <div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
+                  <span class="font-bold text-xs text-on-surface block mb-0.5">Execute-then-Analyze</span>
+                  <p class="text-[11px] text-on-surface-variant">실측 데이터 선조회 후 팩트 분석</p>
+                </div>
+                <div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
+                  <span class="font-bold text-xs text-on-surface block mb-0.5">지능형 통계 차트</span>
+                  <p class="text-[11px] text-on-surface-variant">수치 질문 시 차트 자동 렌더링</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col gap-3 hover:border-secondary/50 transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-secondary-container text-secondary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">monitoring</span>
+                </div>
+                <div>
+                  <span class="text-[11px] font-bold text-secondary uppercase">Feature 5</span>
+                  <h3 class="font-bold text-base text-on-surface">FinOps 비용 급증 분석</h3>
+                </div>
+              </div>
+              <ul class="text-xs text-on-surface-variant space-y-1.5 leading-relaxed">
+                <li class="flex items-center gap-1.5"><span class="text-secondary font-bold">•</span> 50%↑ 비용 스파이크 감지 시 SKU 교차 대조</li>
+                <li class="flex items-center gap-1.5"><span class="text-secondary font-bold">•</span> 비용 상승 주도 원인 자동 요약</li>
+                <li class="flex items-center gap-1.5"><span class="text-secondary font-bold">•</span> 권장 점검 체크포인트 3종 처방</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Implementation Technologies Section (#tech-stack) -->
+      <section class="px-margin-desktop py-14 bg-surface-container-low/60" id="tech-stack">
+        <div class="max-w-container-max mx-auto">
+          <div class="flex flex-col items-center text-center mb-10">
+            <span class="font-label-technical text-label-technical text-primary uppercase tracking-[0.2em]">Implementation Tech</span>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mt-1">대시보드 구현에 사용된 핵심 기술</h2>
+            <p class="font-body-md text-on-surface-variant max-w-3xl mt-2 break-keep">
+              본 엔터프라이즈 AI 거버넌스 대시보드 구축 및 실시간 관제 플랫폼 구현에 <br class="hidden sm:inline">활용된 핵심 기술 스택입니다.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            
+            <!-- Tech 1 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col gap-3 hover:border-primary/50 transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-primary-container text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl">database</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-on-surface text-base mb-1">Google BigQuery</h4>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                  전사 AI Detailed Billing 과금 스트리밍 및 감사 로그 실시간 집계 데이터 웨어하우스
+                </p>
+              </div>
+            </div>
+
+            <!-- Tech 2 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col gap-3 hover:border-secondary/50 transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-secondary-container text-secondary flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl">psychology</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-on-surface text-base mb-1">Gemini 3.5 Flash</h4>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                  2단계 실측 팩트 분석 대화형 AI 챗봇 및 FinOps 비용 급증 진단 AI 엔진
+                </p>
+              </div>
+            </div>
+
+            <!-- Tech 3 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col gap-3 hover:border-tertiary/50 transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-tertiary-container text-tertiary flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl">verified_user</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-on-surface text-base mb-1">Model Armor</h4>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                  프롬프트 인젝션 및 보안 차단 시도(`VERDICT_BLOCK`) 실시간 투명 감사 연동
+                </p>
+              </div>
+            </div>
+
+            <!-- Tech 4 -->
+            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/40 shadow-sm flex flex-col gap-3 hover:border-primary/50 transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-primary-container text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl">terminal</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-on-surface text-base mb-1">Python 3.11 & Cloud Run</h4>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                  멀티스레드 REST API 백엔드 서버 및 서버리스 컨테이너 기반 무중단 호스팅
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation Pill (Fixed Bottom) -->
+      <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <div
+          class="bg-surface-container-lowest/80 backdrop-blur-2xl px-6 py-3 rounded-full shadow-2xl border border-white/60 flex items-center gap-6 text-xs">
+          <a class="font-label-technical text-primary font-bold hover:underline" href="#home">HOME</a>
+          <a class="font-label-technical text-on-surface-variant hover:text-primary transition-colors"
+            href="#description">OVERVIEW</a>
+          <a class="font-label-technical text-on-surface-variant hover:text-primary transition-colors"
+            href="#features">FEATURES</a>
+          <a class="font-label-technical text-on-surface-variant hover:text-primary transition-colors"
+            href="#tech-stack">TECH STACK</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-16 py-10 bg-surface-container-low border-t border-outline-variant/30">
+    <div
+      class="max-w-container-max mx-auto px-margin-desktop flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex flex-col gap-0.5">
+        <span class="font-headline-md text-base font-bold text-on-surface">Enterprise AI Governance & Agent Platform Dashboard</span>
+        <span class="text-xs text-on-surface-variant">Google Cloud Platform & Gemini 3.5 Flash Integration</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs text-on-surface-variant">
+        <a href="https://ge-for-sales-dashboard-1098336234556.us-central1.run.app/" target="_blank" rel="noopener noreferrer"
+          class="text-primary font-semibold hover:underline flex items-center gap-1">
+          <span>Live Demo App</span>
+          <span class="material-symbols-outlined text-[13px]">open_in_new</span>
+        </a>
+        <span>© 2026 Google Cloud</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
