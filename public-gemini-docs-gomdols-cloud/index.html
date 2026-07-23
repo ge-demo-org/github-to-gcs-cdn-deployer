@@ -15,7 +15,7 @@
 
   <style>
     :root {
-      --bg-dark: #070b14;
+      --bg-dark: #090d16;
       --card-bg: rgba(15, 23, 42, 0.65);
       --card-border: rgba(255, 255, 255, 0.08);
       --card-hover-border: rgba(99, 102, 241, 0.45);
@@ -25,11 +25,8 @@
       --text-sub: #cbd5e1;
 
       --google-blue: #3b82f6;
-      --google-green: #10b981;
-      --google-purple: #a855f7;
-
       --gemini-gradient: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
-      --text-gradient: linear-gradient(90deg, #60a5fa 0%, #c084fc 45%, #34d399 90%);
+      --text-gradient: linear-gradient(90deg, #60a5fa 0%, #c084fc 45%, #f472b6 90%);
 
       --card-radius: 18px;
       --transition-speed: 0.25s;
@@ -56,24 +53,24 @@
     /* Ambient Glow Lights */
     .bg-glow-1 {
       position: absolute;
-      top: -120px;
-      left: 15%;
-      width: 750px;
-      height: 550px;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.14) 0%, rgba(147, 51, 234, 0.07) 50%, transparent 80%);
-      filter: blur(70px);
+      top: -100px;
+      left: 18%;
+      width: 720px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.16) 0%, rgba(147, 51, 234, 0.09) 50%, transparent 80%);
+      filter: blur(65px);
       pointer-events: none;
       z-index: 0;
     }
 
     .bg-glow-2 {
       position: absolute;
-      top: 380px;
-      right: 10%;
-      width: 650px;
-      height: 550px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(99, 102, 241, 0.06) 50%, transparent 80%);
-      filter: blur(80px);
+      top: 320px;
+      right: 12%;
+      width: 620px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.13) 0%, rgba(99, 102, 241, 0.07) 50%, transparent 80%);
+      filter: blur(75px);
       pointer-events: none;
       z-index: 0;
     }
@@ -85,7 +82,7 @@
       background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       background-size: 32px 32px;
       pointer-events: none;
-      opacity: 0.55;
+      opacity: 0.6;
       z-index: 0;
     }
 
@@ -119,26 +116,27 @@
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #3b82f6 0%, #10b981 50%, #8b5cf6 100%);
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-size: 0.95rem;
-      box-shadow: 0 0 18px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
     }
 
     .header-badge {
       background: rgba(30, 41, 59, 0.7);
-      color: #34d399;
-      border: 1px solid rgba(52, 211, 153, 0.25);
+      color: #818cf8;
+      border: 1px solid rgba(129, 140, 248, 0.25);
       padding: 7px 16px;
       border-radius: 20px;
       font-size: 0.84rem;
-      font-weight: 600;
+      font-weight: 500;
       font-family: 'JetBrains Mono', monospace;
       letter-spacing: -0.2px;
       backdrop-filter: blur(12px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     /* Hero Section */
@@ -150,15 +148,20 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(52, 211, 153, 0.3);
-      color: #6ee7b7;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(129, 140, 248, 0.3);
+      color: #a5b4fc;
       padding: 6px 16px;
       border-radius: 30px;
       font-size: 0.82rem;
       font-weight: 600;
       margin-bottom: 18px;
       backdrop-filter: blur(8px);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+    }
+
+    .tag-pill i {
+      color: #c084fc;
     }
 
     .hero-title {
@@ -175,6 +178,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: inline-block;
+      filter: drop-shadow(0 2px 10px rgba(192, 132, 252, 0.3));
     }
 
     .hero-subtitle {
@@ -230,7 +234,7 @@
     .badge-icon-green {
       background: rgba(16, 185, 129, 0.15);
       color: #34d399;
-      border: 1px solid rgba(52, 211, 153, 0.3);
+      border: 1px solid rgba(52, 211, 153, 0.35);
     }
 
     .category-title {
@@ -286,12 +290,12 @@
     .card:hover {
       transform: translateY(-4px);
       border-color: var(--card-hover-border);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4), 0 0 20px rgba(99, 102, 241, 0.12);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4), 0 0 25px rgba(99, 102, 241, 0.15);
       background: rgba(15, 23, 42, 0.88);
     }
 
     .card-blue:hover::before {
-      background: linear-gradient(90deg, #38bdf8, #60a5fa);
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
     }
 
     .card-purple:hover::before {
@@ -388,16 +392,16 @@
       color: #c084fc;
     }
 
-    .tag-green {
-      color: #34d399;
-    }
-
     .tag-orange {
       color: #fb923c;
     }
 
     .tag-pink {
       color: #f472b6;
+    }
+
+    .tag-green {
+      color: #34d399;
     }
 
     .card-title {
@@ -485,7 +489,7 @@
     <header>
       <div class="logo">
         <div class="logo-icon">
-          <i class="fa-solid fa-shapes"></i>
+          <i class="fa-solid fa-play"></i>
         </div>
         <span>AI Agent Showcase</span>
       </div>
@@ -497,14 +501,15 @@
     <!-- Hero Section -->
     <section class="hero">
       <div class="tag-pill">
-        <i class="fa-solid fa-layer-group"></i>
-        <span>Curated AI Agent Demos & Solutions</span>
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>Live Demos & Customer Use Cases</span>
       </div>
       <h1 class="hero-title">
         Google Cloud <span class="gradient-text">AI Agent Showcase</span>
       </h1>
       <p class="hero-subtitle">
-        BigQuery 분석 에이전트, A2A 멀티모델 에이전트, AI 거버넌스 및 FinOps 관제 플랫폼 데모를 카테고리별로 만나보세요.
+        Gemini 및 Google Cloud 기반 AI Agent의<br>
+        비즈니스 활용 시나리오, 실시간 인터랙티브 데모 및 가이드를 체험해보세요.
       </p>
     </section>
 
@@ -674,7 +679,7 @@
               <div class="card-tag tag-green">AI GOVERNANCE & FINOPS</div>
               <h3 class="card-title">Enterprise AI Governance Dashboard</h3>
               <p class="card-desc">
-                BigQuery Detailed Billing 연동으로 실시간 LLM 과금, Model Armor 보안 차단 감사 로그 및 Gemini 3.5 Flash FinOps를 관제합니다.
+                전사 AI 실시간 과금 추적, Model Armor 보안 감사 및 FinOps 비용 분석 관제 데모입니다.
               </p>
             </div>
           </div>
