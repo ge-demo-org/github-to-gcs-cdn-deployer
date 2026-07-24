@@ -21,66 +21,105 @@
     }
   </script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <style data-purpose="custom-layout">
-    body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; color: #3c4043; }
+    body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; color: #3c4043; scroll-behavior: smooth; }
     .card-shadow { box-shadow: 0 1px 3px 0 rgba(60,64,67,0.302), 0 4px 8px 3px rgba(60,64,67,0.149); }
     .step-number { border: 4px solid #1a73e8; }
   </style>
 </head>
 <body class="antialiased">
-<!-- BEGIN: HeroSection -->
-<header class="pt-16 pb-24 px-6 md:px-12 lg:px-24 bg-white">
-<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
-<div class="md:w-3/5">
-<div class="flex items-center space-x-2 mb-4">
-<span class="text-blue-600 bg-blue-50 px-3 py-1 rounded-full text-xs font-semibold">✨ Gemini Enterprise App Integration</span>
-</div>
-<h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">BigQuery Knowledge graph</h1>
-<h2 class="text-3xl md:text-4xl font-bold text-indigo-700 mb-6 leading-tight">Conversational Analytics Agent</h2>
-<p class="text-lg text-gray-600 mb-10 leading-relaxed">
-          복잡한 SQL 및 그래프 쿼리(GQL) 구문을 알 필요 없이,<br>
-          자연어 대화를 통해 BigQuery Knowledge Graph 데이터를 조회하고 분석할 수 있는 에이전트를, Gemini Enterprise App과 연동해 보세요!
-        </p>
-<div class="flex flex-wrap gap-4">
-<button class="bg-google-blue text-white px-6 py-3 rounded-lg font-medium shadow-md hover:bg-blue-700 transition flex items-center">
-<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
-            연동 가이드 &amp; 4단계 콘솔 화면 보기
-          </button>
-<button class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition flex items-center">
-<svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-            프롬프트 샘플
-          </button>
-</div>
-</div>
-<div class="md:w-1/3 mt-12 md:mt-0 space-y-4">
-<!-- Feature Cards -->
-<div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4">
-<div class="p-2 bg-blue-50 rounded-lg text-blue-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path></svg></div>
-<div>
-<h4 class="font-bold text-sm">NL-to-SQL</h4>
-<p class="text-xs text-gray-500">자연어 질의를 고성능 SQL로 자동 변환하여 데이터 엔지니어 대기 시간 Zero화</p>
-</div>
-</div>
-<div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4">
-<div class="p-2 bg-blue-50 rounded-lg text-blue-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg></div>
-<div>
-<h4 class="font-bold text-sm">GCP IAM &amp; 보안 승계</h4>
-<p class="text-xs text-gray-500">OAuth 커넥터 기반으로 사용자 본인의 IAM 권한을 전달하여 엄격한 보안 유지</p>
-</div>
-</div>
-<div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4">
-<div class="p-2 bg-purple-50 rounded-lg text-purple-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" fill-rule="evenodd"></path></svg></div>
-<div>
-<h4 class="font-bold text-sm">Knowledge Catalog Grounding</h4>
-<p class="text-xs text-gray-500">전사 표준 메타데이터 및 Verified Queries 기반으로 정확성 있는 SQL 실행</p>
-</div>
-</div>
-</div>
-</div>
-</header>
-<!-- END: HeroSection -->
+
+  <!-- Floating Circular Home Button (Top-Left) -->
+  <a href="../index.html"
+    class="fixed top-4 left-4 sm:top-5 sm:left-6 z-[70] w-11 h-11 rounded-full bg-white/95 text-gray-700 hover:text-google-blue hover:bg-blue-50 border border-gray-200 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 group"
+    title="메인 홈으로 이동">
+    <span class="material-symbols-outlined text-[22px] group-hover:scale-110 transition-transform">home</span>
+  </a>
+
+  <!-- Fixed Top Navigation Bar -->
+  <header class="fixed top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between h-16 bg-white/85 backdrop-blur-xl border border-gray-200/80 rounded-full px-6 sm:px-8 shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-google-blue flex items-center justify-center text-white shadow-sm font-bold text-xs">
+          BQ
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-sm text-gray-900 leading-tight">BigQuery Graph Agent</span>
+          <span class="text-[11px] text-google-blue font-semibold tracking-wide">Gemini Enterprise Integration</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-7 text-xs font-semibold text-gray-600">
+        <a class="hover:text-google-blue transition-colors" href="#home">Home</a>
+        <a class="hover:text-google-blue transition-colors" href="#description">Overview</a>
+        <a class="hover:text-google-blue transition-colors" href="#architecture">Architecture</a>
+        <a class="hover:text-google-blue transition-colors" href="#workflow">Workflow</a>
+        <a class="hover:text-google-blue transition-colors" href="#prompts">Prompts</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <span class="bg-blue-50 text-google-blue px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase hidden sm:inline-block">
+          Enterprise Ready
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-20">
+    <!-- BEGIN: HeroSection -->
+    <section id="home" class="pt-10 pb-20 px-6 md:px-12 lg:px-24 bg-white">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
+        <div class="md:w-3/5">
+          <div class="flex items-center space-x-2 mb-4">
+            <span class="text-blue-600 bg-blue-50 px-3 py-1 rounded-full text-xs font-semibold">✨ Gemini Enterprise App Integration</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">BigQuery Knowledge graph</h1>
+          <h2 class="text-3xl md:text-4xl font-bold text-indigo-700 mb-6 leading-tight">Conversational Analytics Agent</h2>
+          <p class="text-lg text-gray-600 mb-10 leading-relaxed">
+            복잡한 SQL 및 그래프 쿼리(GQL) 구문을 알 필요 없이,<br>
+            자연어 대화를 통해 BigQuery Knowledge Graph 데이터를 조회하고 분석할 수 있는 에이전트를, Gemini Enterprise App과 연동해 보세요!
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a href="#workflow" class="bg-google-blue text-white px-6 py-3 rounded-lg font-medium shadow-md hover:bg-blue-700 transition flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+              연동 가이드 &amp; 4단계 콘솔 화면 보기
+            </a>
+            <a href="#prompts" class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition flex items-center">
+              <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+              프롬프트 샘플
+            </a>
+          </div>
+        </div>
+        <div class="md:w-1/3 mt-12 md:mt-0 space-y-4">
+          <!-- Feature Cards -->
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4">
+            <div class="p-2 bg-blue-50 rounded-lg text-blue-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path></svg></div>
+            <div>
+              <h4 class="font-bold text-sm">NL-to-SQL</h4>
+              <p class="text-xs text-gray-500">자연어 질의를 고성능 SQL로 자동 변환하여 데이터 엔지니어 대기 시간 Zero화</p>
+            </div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4">
+            <div class="p-2 bg-blue-50 rounded-lg text-blue-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg></div>
+            <div>
+              <h4 class="font-bold text-sm">GCP IAM &amp; 보안 승계</h4>
+              <p class="text-xs text-gray-500">OAuth 커넥터 기반으로 사용자 본인의 IAM 권한을 전달하여 엄격한 보안 유지</p>
+            </div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4">
+            <div class="p-2 bg-purple-50 rounded-lg text-purple-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" fill-rule="evenodd"></path></svg></div>
+            <div>
+              <h4 class="font-bold text-sm">Knowledge Catalog Grounding</h4>
+              <p class="text-xs text-gray-500">전사 표준 메타데이터 및 Verified Queries 기반으로 정확성 있는 SQL 실행</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END: HeroSection -->
 <!-- BEGIN: DescriptionPillars -->
-<section class="py-20 px-6 md:px-12 lg:px-24 bg-white border-t border-gray-100">
+<section id="description" class="py-20 px-6 md:px-12 lg:px-24 bg-white border-t border-gray-100">
 <div class="max-w-7xl mx-auto">
 <div class="mb-12">
 <span class="text-google-blue font-bold text-xs uppercase tracking-widest">Agent Overview</span>
@@ -118,7 +157,7 @@
 </section>
 <!-- END: DescriptionPillars -->
 <!-- BEGIN: TechnicalArchitecture -->
-<section class="py-20 px-6 md:px-12 lg:px-24 bg-gray-50">
+<section id="architecture" class="py-20 px-6 md:px-12 lg:px-24 bg-gray-50">
 <div class="max-w-7xl mx-auto text-center">
 <span class="text-google-blue font-bold text-xs uppercase tracking-widest">System Architecture</span>
 <h3 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Technical Architecture</h3>
@@ -173,7 +212,7 @@
 </section>
 <!-- END: TechnicalArchitecture -->
 <!-- BEGIN: StepByStepGuide -->
-<section class="py-20 px-6 md:px-12 lg:px-24 bg-white">
+<section id="workflow" class="py-20 px-6 md:px-12 lg:px-24 bg-white">
 <div class="max-w-7xl mx-auto">
 <span class="text-google-blue font-bold text-xs uppercase tracking-widest">Step-by-Step Guide &amp; Screen Screenshots</span>
 <h3 class="text-3xl font-bold text-gray-900 mt-2 mb-12">Gemini Enterprise App 연동 및 사용 프로세스 (전체 4단계 화면 가이드)</h3>
@@ -343,7 +382,7 @@
 </section>
 <!-- END: BusinessImpact -->
 <!-- BEGIN: PromptLibrary -->
-<section class="py-24 px-6 md:px-12 lg:px-24 bg-white">
+<section id="prompts" class="py-24 px-6 md:px-12 lg:px-24 bg-white">
 <div class="max-w-7xl mx-auto text-center">
 <span class="text-google-blue font-bold text-xs uppercase tracking-widest">Prompt Library</span>
 <h3 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Prompt Samples &amp; Examples</h3>
